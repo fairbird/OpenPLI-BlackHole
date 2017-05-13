@@ -32,6 +32,7 @@ class FrontendInfo(Converter, object):
 			type = type.split(",")
 			self.space_for_tuners = len(type) > 1 and int(type[1]) or 10
 			self.space_for_tuners_with_spaces = len(type) > 2 and int(type[2]) or 6
+			self.show_all_non_link_tuners = True if len(type) <= 3 else type[3] == "True"
 		else:
 			self.type = self.LOCK
 
@@ -65,7 +66,7 @@ class FrontendInfo(Converter, object):
 						color = "\c0000??00"
 					elif self.source.tuner_mask & 1 << n.slot:
 						color = "\c00????00"
-					elif len(nimmanager.nim_slots) <= self.space_for_tuners:
+					elif len(nimmanager.nim_slots) <= self.space_for_tuners or self.show_all_non_link_tuners and not n.isFBCLink():
 						color = "\c007?7?7?"
 					else:
 						continue
