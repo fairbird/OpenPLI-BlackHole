@@ -618,21 +618,21 @@ class NIM(object):
         friendly_type = property(getFriendlyType)
 
         def getFullDescription(self):
-		return self.empty and _("(empty)") or "%s (%s)" % (self.description, self.isSupported() and self.friendly_type or _("not supported"))
+                return self.empty and _("(empty)") or "%s (%s)" % (self.description, self.isSupported() and self.friendly_type or _("not supported"))
 
-                def getFriendlyFullDescription(self):
-		return "%s: %s" % (self.slot_name, self.getFullDescription())
+        def getFriendlyFullDescription(self):
+                return "%s: %s" % (self.slot_name, self.getFullDescription())
 
-	def getFriendlyFullDescriptionCompressed(self):
-		if self.isFBCRoot():
-			return "%s-%s: %s" % (self.slot_name, chr(ord('A') + self.slot + 7), self.getFullDescription())
-		#compress by combining dual tuners by checking if the next tuner has an rf switch
-		elif os.access("/proc/stb/frontend/%d/rf_switch" % (self.frontend_id + 1), os.F_OK):
-			return "%s-%s: %s" % (self.slot_name, chr(ord('A') + self.slot + 1), self.getFullDescription())
-		return self.getFriendlyFullDescription()
+        def getFriendlyFullDescriptionCompressed(self):
+                if self.isFBCRoot():
+                        return "%s-%s: %s" % (self.slot_name, chr(ord('A') + self.slot + 7), self.getFullDescription())
+                #compress by combining dual tuners by checking if the next tuner has an rf switch
+                elif os.access("/proc/stb/frontend/%d/rf_switch" % (self.frontend_id + 1), os.F_OK):
+                        return "%s-%s: %s" % (self.slot_name, chr(ord('A') + self.slot + 1), self.getFullDescription())
+                return self.getFriendlyFullDescription()
 
         friendly_full_description = property(getFriendlyFullDescription)
-	friendly_full_description_compressed = property(getFriendlyFullDescriptionCompressed)
+        friendly_full_description_compressed = property(getFriendlyFullDescriptionCompressed)
         config_mode = property(lambda self: config.Nims[self.slot].configMode.value)
         config = property(lambda self: config.Nims[self.slot])
         empty = property(lambda self: self.getType() is None)
@@ -644,9 +644,9 @@ class NimManager:
         def getTransponders(self, pos, feid = None):
                 if pos in self.transponders:
                         if feid is None or self.nim_slots[feid].isMultistream():
-				return self.transponders[pos]
-			else: # remove multistream transponders
-				return [tp for tp in self.transponders[pos] if not (tp[5] == eDVBFrontendParametersSatellite.System_DVB_S2 and (tp[10] > -1 or tp[11] > 0 or tp[12] > 1))]
+                                return self.transponders[pos]
+                        else: # remove multistream transponders
+                                return [tp for tp in self.transponders[pos] if not (tp[5] == eDVBFrontendParametersSatellite.System_DVB_S2 and (tp[10] > -1 or tp[11] > 0 or tp[12] > 1))]
                 else:
                         return []
 
@@ -835,10 +835,10 @@ class NimManager:
 
         # get a list with the friendly full description
         def nimList(self):
-		return [slot.friendly_full_description for slot in self.nim_slots]
+                return [slot.friendly_full_description for slot in self.nim_slots]
 
-	def nimListCompressed(self):
-		return [slot.friendly_full_description_compressed for slot in self.nim_slots if not (slot.isFBCLink() or slot.internally_connectable)]
+        def nimListCompressed(self):
+                return [slot.friendly_full_description_compressed for slot in self.nim_slots if not (slot.isFBCLink() or slot.internally_connectable)]
 
         def getSlotCount(self):
                 return len(self.nim_slots)
