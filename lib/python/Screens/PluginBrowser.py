@@ -226,7 +226,7 @@ class PluginDownloadBrowser(Screen):
          'back': self.requestClose})
         if os.path.isfile('/usr/bin/opkg'):
             self.ipkg = '/usr/bin/opkg'
-            self.ipkg_install = self.ipkg + ' install'
+            self.ipkg_install = self.ipkg + ' install -force-overwrite'
             self.ipkg_remove = self.ipkg + ' remove --autoremove'
         else:
             self.ipkg = 'ipkg'
