@@ -9,11 +9,31 @@ from Screens.MessageBox import MessageBox
 from Screens.Console import Console
 from Tools.LoadPixmap import LoadPixmap
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
+from enigma import getDesktop
 from os import system
+
 menuid = 0
+desktop = getDesktop(0)
+size = desktop.size()
+width = size.width()
 
 class Ipkuninstall(Screen):
-    skin = '\n\t\t<screen name="Ipkuninstall" position="center,center" size="530,400" title="Ipk Uninstaller - Main Menu" >\n\t\t\t<widget source="list" render="Listbox" position="10,50" size="510,380" zPosition="1" scrollbarMode="showOnDemand">\n\t\t\t\t<convert type="TemplatedMultiContent">\n\t\t\t\t\t{"template": [\n\t\t\t\t\t\t\t\t\tMultiContentEntryText(pos = (110, 2), size = (440, 26), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 0), # index 2 is the description\n\t\t\t\t\t\t\t\t\tMultiContentEntryText(pos = (110, 28), size = (440, 26), font=1, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 2), # index 2 is the description\n\t\t\t\t\t\t\t\t\tMultiContentEntryPixmapAlphaTest(pos = (2, 1), size = (100, 50), png = 3), # index 4 is the status pixmap\n\t\t\t\t\t\t\t\t\tMultiContentEntryPixmapAlphaTest(pos = (0, 54), size = (510, 2), png = 4), # index 4 is the div pixmap\n\t\t\t\t\t\t\t],\n\t\t\t\t\t"fonts": [gFont("Regular", 24),gFont("Regular", 16)],\n\t\t\t\t\t"itemHeight": 58\n\t\t\t\t\t}\n\t\t\t\t</convert>\n\t\t\t</widget>\n\t\t\t<widget source="info" render="Label" position="150,10" size="450,25" zPosition="1" font="Regular;22" foregroundColor="#ffffff" transparent="1" halign="left" valign="center" />\n\t\t</screen>'
+    skin = '''<screen name="Ipkuninstall" position="center,center" size="530,400" title="Ipk Uninstaller - Main Menu" >
+              <widget source="list" render="Listbox" position="10,50" size="510,380" zPosition="1" scrollbarMode="showOnDemand">
+                <convert type="TemplatedMultiContent">
+{"template": [
+MultiContentEntryText(pos = (110, 2), size = (440, 26), font=0, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 0), # index 2 is the description
+MultiContentEntryText(pos = (110, 28), size = (440, 26), font=1, flags = RT_HALIGN_LEFT|RT_VALIGN_CENTER, text = 2), # index 2 is the description
+MultiContentEntryPixmapAlphaTest(pos = (2, 1), size = (100, 50), png = 3), # index 4 is the status pixmap
+MultiContentEntryPixmapAlphaTest(pos = (0, 54), size = (510, 2), png = 4), # index 4 is the div pixmap
+],
+"fonts": [gFont("Regular", 24),gFont("Regular", 16)],
+"itemHeight": 58
+}
+                </convert>
+              </widget>
+              <widget source="info" render="Label" position="150,10" size="450,25" zPosition="1" font="Regular;22" foregroundColor="#ffffff" transparent="1" halign="left" valign="center" />
+            </screen>'''
 
     def __init__(self, session):
         self.session = session
@@ -81,13 +101,27 @@ class Ipkuninstall(Screen):
     def exit(self):
         self.close()
 
+if width == 1280:
+    IpkuninstallList_SKIN = '''<screen name="IpkuninstallList" position="center,center" size="530,400" title="Ipk Uninstaller - List installed" >
+                <widget name="list" position="10,50" size="510,360" zPosition="1" scrollbarMode="showOnDemand" />
+                <widget source="info" render="Label" position="110,10" size="450,25" zPosition="1" font="Regular;22" foregroundColor="#ffffff" transparent="1" halign="left" valign="center" />
+           </screen>'''
+elif width == 1920:
+    IpkuninstallList_SKIN = '''<screen name="IpkuninstallList" position="center,center" size="800,700" title="Ipk Uninstaller - List installed">
+                <widget name="list" position="10,60" size="780,630" font="Regular; 30" itemHeight="35" zPosition="1" scrollbarMode="showOnDemand" />
+                <widget source="info" render="Label" position="0,5" size="800,45" zPosition="1" font="Regular; 30" foregroundColor="#ffffff" transparent="1" halign="center" valign="center" />
+           </screen>'''
+else:
+    IpkuninstallList_SKIN = '''<screen name="IpkuninstallList" position="center,center" size="530,400" title="Ipk Uninstaller - List installed" >
+                <widget name="list" position="10,50" size="510,360" zPosition="1" scrollbarMode="showOnDemand" />
+                <widget source="info" render="Label" position="110,10" size="450,25" zPosition="1" font="Regular;22" foregroundColor="#ffffff" transparent="1" halign="left" valign="center" />
+           </screen>'''
 
 class IpkuninstallList(Screen):
-    skin = '\n\t\t<screen name="IpkuninstallList" position="center,center" size="530,400" title="Ipk Uninstaller - List installed" >\n\t\t\t<widget name="list" position="10,50" size="510,360" zPosition="1" scrollbarMode="showOnDemand" />\n\t\t\t<widget source="info" render="Label" position="110,10" size="450,25" zPosition="1" font="Regular;22" foregroundColor="#ffffff" transparent="1" halign="left" valign="center" />\n\t\t</screen>'
-
     def __init__(self, session):
         self.session = session
         Screen.__init__(self, session)
+        self.skin = IpkuninstallList_SKIN
         self.skinName = 'IpkuninstallList'
         self['actions'] = ActionMap(['OkCancelActions'], {'ok': self.okClicked,
          'cancel': self.cancel}, -1)
@@ -122,7 +156,8 @@ class IpkuninstallList(Screen):
             self.ipk = self.ipklist1[ires]
             n1 = self.ipk.find('_', 0)
             self.ipk = self.ipk[:n1]
-            self.session.openWithCallback(self.delete, ChoiceBox, title=_('Select method?'), list=[(_('Remove'), 'rem'), (_('Force Depends'), 'force-depends'), (_('Force Remove'), 'force-remove')])
+            #self.session.openWithCallback(self.delete, ChoiceBox, title=_('Select method?'), list=[(_('Remove'), 'rem'), (_('Force Depends'), 'force-depends'), (_('Force Remove'), 'force-remove')])
+            self.session.openWithCallback(self.delete, ChoiceBox, title=_('Select method?'), list=[(_('Force Remove'), 'force-remove')])
         else:
             return
 
