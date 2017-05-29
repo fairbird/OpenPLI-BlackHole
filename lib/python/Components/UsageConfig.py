@@ -525,87 +525,74 @@ def InitUsageConfig():
     config.misc.erase_speed.addNotifier(updateEraseSpeed, immediate_feedback=False)
     config.misc.erase_flags = ConfigSelection(default='1', choices=[('0', _('Disable')), ('1', _('Internal hdd only')), ('3', _('Everywhere'))])
     config.misc.erase_flags.addNotifier(updateEraseFlags, immediate_feedback=False)
-    if SystemInfo['ZapMode']:
 
+    if SystemInfo['ZapMode']:
         def setZapmode(el):
             open(SystemInfo['ZapMode'], 'w').write(el.value)
-
         config.misc.zapmode = ConfigSelection(default='mute', choices=[('mute', _('Black screen')),
          ('hold', _('Hold screen')),
          ('mutetilllock', _('Black screen till locked')),
          ('holdtilllock', _('Hold till locked'))])
         config.misc.zapmode.addNotifier(setZapmode, immediate_feedback=False)
     config.usage.historymode = ConfigSelection(default='1', choices=[('0', _('Just zap')), ('1', _('Show menu'))])
-    if SystemInfo['VFD_scroll_repeats']:
 
+    if SystemInfo['VFD_scroll_repeats']:
         def scroll_repeats(el):
             open(SystemInfo['VFD_scroll_repeats'], 'w').write(el.value)
-
         choicelist = []
         for i in range(1, 11, 1):
             choicelist.append(str(i))
-
         config.usage.vfd_scroll_repeats = ConfigSelection(default='3', choices=choicelist)
         config.usage.vfd_scroll_repeats.addNotifier(scroll_repeats, immediate_feedback=False)
-    if SystemInfo['VFD_scroll_delay']:
 
+    if SystemInfo['VFD_scroll_delay']:
         def scroll_delay(el):
             open(SystemInfo['VFD_scroll_delay'], 'w').write(el.value)
-
         choicelist = []
         for i in range(0, 1001, 50):
             choicelist.append(str(i))
-
         config.usage.vfd_scroll_delay = ConfigSelection(default='150', choices=choicelist)
         config.usage.vfd_scroll_delay.addNotifier(scroll_delay, immediate_feedback=False)
-    if SystemInfo['VFD_initial_scroll_delay']:
 
+    if SystemInfo['VFD_initial_scroll_delay']:
         def initial_scroll_delay(el):
             open(SystemInfo['VFD_initial_scroll_delay'], 'w').write(el.value)
-
         choicelist = []
         for i in range(0, 20001, 500):
             choicelist.append(str(i))
-
         config.usage.vfd_initial_scroll_delay = ConfigSelection(default='1000', choices=choicelist)
         config.usage.vfd_initial_scroll_delay.addNotifier(initial_scroll_delay, immediate_feedback=False)
-    if SystemInfo['VFD_final_scroll_delay']:
 
+    if SystemInfo['VFD_final_scroll_delay']:
         def final_scroll_delay(el):
             open(SystemInfo['VFD_final_scroll_delay'], 'w').write(el.value)
-
         choicelist = []
         for i in range(0, 20001, 500):
             choicelist.append(str(i))
-
         config.usage.vfd_final_scroll_delay = ConfigSelection(default='1000', choices=choicelist)
         config.usage.vfd_final_scroll_delay.addNotifier(final_scroll_delay, immediate_feedback=False)
-    if SystemInfo['HasForceLNBOn']:
 
+    if SystemInfo['HasForceLNBOn']:
         def forceLNBPowerChanged(configElement):
             open(SystemInfo['HasForceLNBOn'], 'w').write(configElement.value)
-
         config.misc.forceLnbPower = ConfigSelection(default='on', choices=[('on', _('Yes')), ('off', _('No'))])
         config.misc.forceLnbPower.addNotifier(forceLNBPowerChanged)
-    if SystemInfo['HasForceToneburst']:
 
+    if SystemInfo['HasForceToneburst']:
         def forceToneBurstChanged(configElement):
             open(SystemInfo['HasForceToneburst'], 'w').write(configElement.value)
-
         config.misc.forceToneBurst = ConfigSelection(default='enable', choices=[('enable', _('Yes')), ('disable', _('No'))])
         config.misc.forceToneBurst.addNotifier(forceToneBurstChanged)
-    if SystemInfo['HasBypassEdidChecking']:
 
+    if SystemInfo['HasBypassEdidChecking']:
         def setHasBypassEdidChecking(configElement):
             open(SystemInfo['HasBypassEdidChecking'], 'w').write(configElement.value)
-
         config.av.bypassEdidChecking = ConfigSelection(default='00000000', choices=[('00000001', _('Yes')), ('00000000', _('No'))])
         config.av.bypassEdidChecking.addNotifier(setHasBypassEdidChecking)
-    if SystemInfo['HasColorspace']:
 
+    if SystemInfo['HasColorspace']:
         def setHaveColorspace(configElement):
             open(SystemInfo['HasColorspace'], 'w').write(configElement.value)
-
         if SystemInfo['HasColorspaceSimple']:
             config.av.hdmicolorspace = ConfigSelection(default='Edid(Auto)', choices={'Edid(Auto)': _('Auto'),
              'Hdmi_Rgb': _('RGB')})
