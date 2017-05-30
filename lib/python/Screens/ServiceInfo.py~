@@ -61,6 +61,7 @@ def ServiceInfoListEntry(a, b="", valueType=TYPE_TEXT, param=4):
 			(eListboxPythonMultiContent.TYPE_TEXT, xa, ya, wa + wb, ha + hb, 0, RT_HALIGN_LEFT, a)
 		]
 
+
 class ServiceInfoList(HTMLComponent, GUIComponent):
 	def __init__(self, source):
 		GUIComponent.__init__(self)
