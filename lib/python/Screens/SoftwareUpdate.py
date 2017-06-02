@@ -123,14 +123,22 @@ class UpdatePlugin(Screen, ProtectedScreen):
 	def getLatestImageTimestamp(self):
 		currentTimeoutDefault = socket.getdefaulttimeout()
 		socket.setdefaulttimeout(3)
-		latestImageTimestamp = ""
 		try:
 			# TODO: Use Twisted's URL fetcher, urlopen is evil. And it can
 			# run in parallel to the package update.
-			latestImageTimestamp = re.findall('<dd>(.*?)</dd>', urlopen("http://openpli.org/download/"+getBoxType()+"/").read())[0][:16]
-			latestImageTimestamp = time.strftime(_("%d-%b-%Y %-H:%M"), time.strptime(latestImageTimestamp, "%Y/%m/%d %H:%M"))
+			from time import strftime
+			from datetime import datetime
+			imageVersion = about.getImageTypeString().split(" ")[1]
+			imageVersion = (int(imageVersion) < 5 and "%.1f" or "%s") % int(imageVersion)
+			url = "https://openpli.org/download/timestamp/%s~%s" % (HardwareInfo().get_device_model(), imageVersion)
+			try:
+				latestImageTimestamp = datetime.fromtimestamp(int(urlopen(url, timeout=5).read())).strftime(_("%Y-%m-%d %H:%M"))
+			except:
+				# OpenPli 5.0 uses python 2.7.11 and here we need to bypass the certificate check
+				from ssl import _create_unverified_context
+				latestImageTimestamp = datetime.fromtimestamp(int(urlopen(url, timeout=5, context=_create_unverified_context()).read())).strftime(_("%Y-%m-%d %H:%M"))
 		except:
-			pass
+			latestImageTimestamp = ""
 		socket.setdefaulttimeout(currentTimeoutDefault)
 		return latestImageTimestamp
 
