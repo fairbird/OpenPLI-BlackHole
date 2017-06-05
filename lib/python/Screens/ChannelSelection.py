@@ -181,13 +181,14 @@ class ChannelContextMenu(Screen):
                             append_when_current_valid(current, menu, (_('Unmark service as dedicated 3D service'), self.removeDedicated3DFlag), level=0)
                         else:
                             append_when_current_valid(current, menu, (_('Mark service as dedicated 3D service'), self.addDedicated3DFlag), level=0)
-                    if eDVBDB.getInstance().getFlag(eServiceReference(current.toString())) & FLAG_HIDE_VBI:
+                    if not (current_sel_path):
+                        if eDVBDB.getInstance().getFlag(eServiceReference(current.toString())) & FLAG_HIDE_VBI:
                             append_when_current_valid(current, menu, (_("Uncover dashed flickering line for this service"), self.removeHideVBIFlag), level=0)
-                    else:
+                        else:
                             append_when_current_valid(current, menu, (_("Cover dashed flickering line for this service"), self.addHideVBIFlag), level=0)
-                    if eDVBDB.getInstance().getFlag(eServiceReference(current.toString())) & FLAG_CENTER_DVB_SUBS:
+                        if eDVBDB.getInstance().getFlag(eServiceReference(current.toString())) & FLAG_CENTER_DVB_SUBS:
 			    append_when_current_valid(current, menu, (_("Do not center DVB subs on this service"), self.removeCenterDVBSubsFlag), level=0)
-		    else:
+		        else:
 			    append_when_current_valid(current, menu, (_("Do center DVB subs on this service"), self.addCenterDVBSubsFlag), level=0)
 
                     if haveBouquets:
