@@ -134,7 +134,7 @@ class ChannelContextMenu(Screen):
          'blue': self.showServiceInPiP,
          'red': self.playMain,
          'menu': self.openSetup,
-	 '1': self.unhideParentalServices,
+     '1': self.unhideParentalServices,
          '2': self.renameEntry,
          '3': self.findCurrentlyPlayed,
          '5': self.addServiceToBouquetOrAlternative,
@@ -187,9 +187,9 @@ class ChannelContextMenu(Screen):
                         else:
                             append_when_current_valid(current, menu, (_("Cover dashed flickering line for this service"), self.addHideVBIFlag), level=0)
                         if eDVBDB.getInstance().getFlag(eServiceReference(current.toString())) & FLAG_CENTER_DVB_SUBS:
-			    append_when_current_valid(current, menu, (_("Do not center DVB subs on this service"), self.removeCenterDVBSubsFlag), level=0)
-		        else:
-			    append_when_current_valid(current, menu, (_("Do center DVB subs on this service"), self.addCenterDVBSubsFlag), level=0)
+                            append_when_current_valid(current, menu, (_("Do not center DVB subs on this service"), self.removeCenterDVBSubsFlag), level=0)
+                        else:
+                            append_when_current_valid(current, menu, (_("Do center DVB subs on this service"), self.addCenterDVBSubsFlag), level=0)
 
                     if haveBouquets:
                         bouquets = self.csel.getBouquetList()
@@ -312,16 +312,16 @@ class ChannelContextMenu(Screen):
         self.close()
 
     def addCenterDVBSubsFlag(self):
-	eDVBDB.getInstance().addFlag(eServiceReference(self.csel.getCurrentSelection().toString()), FLAG_CENTER_DVB_SUBS)
-	eDVBDB.getInstance().reloadBouquets()
-	config.subtitles.dvb_subtitles_centered.value = True
-	self.close()
+        eDVBDB.getInstance().addFlag(eServiceReference(self.csel.getCurrentSelection().toString()), FLAG_CENTER_DVB_SUBS)
+        eDVBDB.getInstance().reloadBouquets()
+        config.subtitles.dvb_subtitles_centered.value = True
+        self.close()
 
     def removeCenterDVBSubsFlag(self):
-	eDVBDB.getInstance().removeFlag(eServiceReference(self.csel.getCurrentSelection().toString()), FLAG_CENTER_DVB_SUBS)
-	eDVBDB.getInstance().reloadBouquets()
-	config.subtitles.dvb_subtitles_centered.value = False
-	self.close()
+        eDVBDB.getInstance().removeFlag(eServiceReference(self.csel.getCurrentSelection().toString()), FLAG_CENTER_DVB_SUBS)
+        eDVBDB.getInstance().reloadBouquets()
+        config.subtitles.dvb_subtitles_centered.value = False
+        self.close()
 
     def isProtected(self):
         return self.csel.protectContextMenu and config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.context_menus.value
@@ -1817,7 +1817,7 @@ class ChannelSelectionBase(Screen):
                 if info and playingref:
                     provider = info.getInfoString(iServiceInformation.sProvider)
                     op = int(playingref.toString().split(':')[6][:-4] or "0",16)
- 		    refstr = '1:7:0:0:0:0:0:0:0:0:(provider == \"%s\") && (satellitePosition == %s) && %s ORDER BY name:%s' % (provider, op, self.service_types[self.service_types.rfind(':')+1:], provider)
+                    refstr = '1:7:0:0:0:0:0:0:0:0:(provider == \"%s\") && (satellitePosition == %s) && %s ORDER BY name:%s' % (provider, op, self.service_types[self.service_types.rfind(':')+1:], provider)
                     self.setCurrentSelection(eServiceReference(refstr))
         elif not self.isBasePathEqual(self.bouquet_root) or self.bouquet_mark_edit == EDIT_ALTERNATIVES:
             if playingref:
@@ -2528,7 +2528,7 @@ class SimpleChannelSelection(ChannelSelectionBase, SelectionEventInfo):
          'keyTV': self.setModeTv})
         self.bouquet_mark_edit = OFF
         if isinstance(title, str):
-		self.maintitle = title
+           self.maintitle = title
         self.currentBouquet = currentBouquet
         self.returnBouquet = returnBouquet
         self.setService = setService
