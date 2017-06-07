@@ -78,6 +78,7 @@ def InitUsageConfig():
     config.usage.show_spinner = ConfigYesNo(default=True)
     config.usage.menu_sort_weight = ConfigDictionarySet(default={'mainmenu': {'submenu': {}}})
     config.usage.menu_sort_mode = ConfigSelection(default='default', choices=[('a_z', _('alphabetical')), ('default', _('Default')), ('user', _('user defined'))])
+    config.usage.menu_show_numbers = ConfigYesNo(default = False)
     config.usage.menu_path = ConfigSelection(default='off', choices=[('off', _('Disabled')), ('small', _('Small')), ('large', _('Large'))])
     config.usage.enable_tt_caching = ConfigYesNo(default=True)
     choicelist = []
