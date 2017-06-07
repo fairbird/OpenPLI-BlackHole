@@ -59,10 +59,12 @@ class Menu(Screen, ProtectedScreen):
     ALLOW_SUSPEND = True
 
     def okbuttonClick(self):
-        self.resetNumberKey()
-        selection = self['menu'].getCurrent()
+        if self.number:
+           self["menu"].setIndex(self.number - 1)
+           self.resetNumberKey()
+           selection = self['menu'].getCurrent()
         if selection and selection[1]:
-            selection[1]()
+           selection[1]()
 
     def execText(self, text):
         exec text
@@ -250,8 +252,8 @@ class Menu(Screen, ProtectedScreen):
         self.setTitle(title)
 
         self.number = 0
-	self.nextNumberTimer = eTimer()
-	self.nextNumberTimer.callback.append(self.okbuttonClick)
+    self.nextNumberTimer = eTimer()
+    self.nextNumberTimer.callback.append(self.okbuttonClick)
 
     def createMenuList(self):
         self.list = []
@@ -324,25 +326,24 @@ class Menu(Screen, ProtectedScreen):
         else:
             self.list.sort(key=lambda x: int(x[3]))
 
-	if config.usage.menu_show_numbers.value:
-	    self.list = [(str(x[0] + 1) + " " +x[1][0], x[1][1], x[1][2]) for x in enumerate(self.list)]
+    if config.usage.menu_show_numbers.value:
+        self.list = [(str(x[0] + 1) + " " +x[1][0], x[1][1], x[1][2]) for x in enumerate(self.list)]
 
         self['menu'].updateList(self.list)
 
     def keyNumberGlobal(self, number):
         self.number = self.number * 10 + number
-		if self.number and self.number <= len(self["menu"].list):
-			self["menu"].setIndex(self.number - 1)
-			if len(self["menu"].list) < 10 or self.number >= 10:
-				self.okbuttonClick()
-			else:
-				self.nextNumberTimer.start(1500, True)
-		else:
-			self.number = 0
+    if self.number and self.number <= len(self["menu"].list):
+        if number * 10 > len(self["menu"].list) or self.number >= 10:
+            self.okbuttonClick()
+        else:
+            self.nextNumberTimer.start(1500, True)
+    else:
+        self.resetNumberKey()
 
     def resetNumberKey(self):
-	self.nextNumberTimer.stop()
-	self.number = 0
+        self.nextNumberTimer.stop()
+        self.number = 0
 
     def closeNonRecursive(self):
         self.resetNumberKey()
@@ -368,7 +369,7 @@ class Menu(Screen, ProtectedScreen):
 
     def keyBlue(self):
         if config.usage.menu_sort_mode.value == "user":
-		self.session.openWithCallback(self.menuSortCallBack, MenuSort, self.parentmenu)
+           self.session.openWithCallback(self.menuSortCallBack, MenuSort, self.parentmenu)
 
     def menuSortCallBack(self, key = False):
         self.createMenuList()
