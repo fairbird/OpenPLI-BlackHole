@@ -292,6 +292,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
             x(True)
 
         self.startHideTimer()
+        VolumeControl.instance and VolumeControl.instance.showMute()
         if config.misc.deliteeinfo.value and self.InfoBar_NabDialog:
             self.InfoBar_NabDialog.show()
             self.__stateNab = self.STATE_SHOWN
