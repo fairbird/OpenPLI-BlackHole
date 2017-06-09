@@ -1,4 +1,5 @@
 from Screen import Screen
+from Screens.MessageBox import MessageBox
 from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Sources.StaticText import StaticText
@@ -226,7 +227,6 @@ class CommitInfo(Screen):
          ('enigma2-plugins', 'Enigma2 Plugins'),
          ('aio-grab', 'Aio Grab'),
          ('gst-plugin-dvbmediasink', 'Gst Plugin Dvbmediasink'),
-         ('HenksatSettings', 'Henksat Settings'),
          ('enigma2-plugin-extensions-xmltvimport', 'Plugin Xmltvimport'),
          ('enigma2-plugin-skins-magic', 'Skin Magic SD'),
          ('tuxtxt', 'Tuxtxt')]
@@ -266,7 +266,7 @@ class CommitInfo(Screen):
         self['AboutScrollLabel'].setText(commitlog)
 
     def updateCommitLogs(self):
-        if self.cachedProjects.has_key(self.projects[self.project][1]):
+        if self.projects[self.project][1] in self.cachedProjects:
             self['AboutScrollLabel'].setText(self.cachedProjects[self.projects[self.project][1]])
         else:
             self['AboutScrollLabel'].setText(_('Please wait'))
