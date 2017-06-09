@@ -429,110 +429,111 @@ def applyAllAttributes(guiObject, desktop, attributes, scale):
 
 
 def loadSingleSkinData(desktop, skin, path_prefix):
-	"""loads skin data like colors, windowstyle etc."""
-	assert skin.tag == "skin", "root element in skin must be 'skin'!"
-	for c in skin.findall("output"):
-		id = c.attrib.get('id')
-		if id:
-			id = int(id)
-		else:
-			id = 0
-		if id == 0: # framebuffer
-			for res in c.findall("resolution"):
-				get_attr = res.attrib.get
-				xres = get_attr("xres")
-				if xres:
-					xres = int(xres)
-				else:
-					xres = 720
-				yres = get_attr("yres")
-				if yres:
-					yres = int(yres)
-				else:
-					yres = 576
-				bpp = get_attr("bpp")
-				if bpp:
-					bpp = int(bpp)
-				else:
-					bpp = 32
-				#print "Resolution:", xres,yres,bpp
-				from enigma import gMainDC
-				gMainDC.getInstance().setResolution(xres, yres)
-				desktop.resize(eSize(xres, yres))
-				if bpp != 32:
-					# load palette (not yet implemented)
-					pass
-				if yres >= 1080:
-					parameters["FileListName"] = (68,4,1000,34)
-					parameters["FileListIcon"] = (7,4,52,37)
-					parameters["FileListMultiName"] = (90,3,1000,32)
-					parameters["FileListMultiIcon"] = (45, 4, 30, 30)
-					parameters["FileListMultiLock"] = (2,0,36,36)
-					parameters["ChoicelistDash"] = (0,3,1000,30)
-					parameters["ChoicelistName"] = (68,3,1000,30)
-					parameters["ChoicelistIcon"] = (7,0,52,38)
-					parameters["PluginBrowserName"] = (180,8,38)
-					parameters["PluginBrowserDescr"] = (180,42,25)
-					parameters["PluginBrowserIcon"] = (15,8,150,60)
-					parameters["PluginBrowserDownloadName"] = (120,8,38)
-					parameters["PluginBrowserDownloadDescr"] = (120,42,25)
-					parameters["PluginBrowserDownloadIcon"] = (15,0,90,76)
-					parameters["ServiceInfo"] = (0,0,450,50)
-					parameters["ServiceInfoLeft"] = (0,0,450,45)
-					parameters["ServiceInfoRight"] = (450,0,1000,45)
-					parameters["SelectionListDescr"] = (45,3,1000,32)
-					parameters["SelectionListLock"] = (0,2,36,36)
-					parameters["ConfigListSeperator"] = 300
-					parameters["VirtualKeyboard"] = (68,68)
-					parameters["PartnerBoxEntryListName"] = (8,2,225,38)
-					parameters["PartnerBoxEntryListIP"] = (180,2,225,38)
-					parameters["PartnerBoxEntryListPort"] = (405,2,150,38)
-					parameters["PartnerBoxEntryListType"] = (615,2,150,38)
-					parameters["PartnerBoxTimerServicename"] = (0,0,45)
-					parameters["PartnerBoxTimerName"] = (0,42,30)
-					parameters["PartnerBoxE1TimerTime"] = (0,78,255,30)
-					parameters["PartnerBoxE1TimerState"] = (255,78,255,30)
-					parameters["PartnerBoxE2TimerTime"] = (0,78,225,30)
-					parameters["PartnerBoxE2TimerState"] = (225,78,225,30)
-					parameters["PartnerBoxE2TimerIcon"] = (1050,8,20,20)
-					parameters["PartnerBoxE2TimerIconRepeat"] = (1050,38,20,20)
-					parameters["PartnerBoxBouquetListName"] = (0,0,45)
-					parameters["PartnerBoxChannelListName"] = (0,0,45)
-					parameters["PartnerBoxChannelListTitle"] = (0,42,30)
-					parameters["PartnerBoxChannelListTime"] = (0,78,225,30)
-					parameters["HelpMenuListHlp"] = (0,0,900,42)
-					parameters["HelpMenuListExtHlp0"] = (0,0,900,39)
-					parameters["HelpMenuListExtHlp1"] = (0,42,900,30)
-					parameters["AboutHddSplit"] = 1
-					parameters["DreamexplorerName"] = (62,0,1200,38)
-					parameters["DreamexplorerIcon"] = (15,4,30,30)
-					parameters["PicturePlayerThumb"] = (30,285,45,300,30,25)
-					parameters["PlayListName"] = (38,2,1000,34)
-					parameters["PlayListIcon"] = (7,7,24,24)
-					parameters["SHOUTcastListItem"] = (30,27,35,96,35,33,60,32)
+        """loads skin data like colors, windowstyle etc."""
+        assert skin.tag == "skin", "root element in skin must be 'skin'!"
+        for c in skin.findall("output"):
+                id = c.attrib.get('id')
+                if id:
+                        id = int(id)
+                else:
+                        id = 0
+                if id == 0: # framebuffer
+                        for res in c.findall("resolution"):
+                                get_attr = res.attrib.get
+                                xres = get_attr("xres")
+                                if xres:
+                                        xres = int(xres)
+                                else:
+                                        xres = 720
+                                yres = get_attr("yres")
+                                if yres:
+                                        yres = int(yres)
+                                else:
+                                        yres = 576
+                                bpp = get_attr("bpp")
+                                if bpp:
+                                        bpp = int(bpp)
+                                else:
+                                        bpp = 32
+                                #print "Resolution:", xres,yres,bpp
+                                from enigma import gMainDC
+                                gMainDC.getInstance().setResolution(xres, yres)
+                                desktop.resize(eSize(xres, yres))
+                                if bpp != 32:
+                                        # load palette (not yet implemented)
+                                        pass
+                                if yres >= 1080:
+                                        parameters["FileListName"] = (68,4,1000,34)
+                                        parameters["FileListIcon"] = (7,4,52,37)
+                                        parameters["FileListMultiName"] = (90,3,1000,32)
+                                        parameters["FileListMultiIcon"] = (45, 4, 30, 30)
+                                        parameters["FileListMultiLock"] = (2,0,36,36)
+                                        parameters["ChoicelistDash"] = (0,3,1000,30)
+                                        parameters["ChoicelistName"] = (68,3,1000,30)
+                                        parameters["ChoicelistIcon"] = (7,0,52,38)
+                                        parameters["PluginBrowserName"] = (180,8,38)
+                                        parameters["PluginBrowserDescr"] = (180,42,25)
+                                        parameters["PluginBrowserIcon"] = (15,8,150,60)
+                                        parameters["PluginBrowserDownloadName"] = (120,8,38)
+                                        parameters["PluginBrowserDownloadDescr"] = (120,42,25)
+                                        parameters["PluginBrowserDownloadIcon"] = (15,0,90,76)
+                                        parameters["ServiceInfo"] = (0,0,450,50)
+                                        parameters["ServiceInfoLeft"] = (0,0,450,45)
+                                        parameters["ServiceInfoRight"] = (450,0,1000,45)
+                                        parameters["SelectionListDescr"] = (45,3,1000,32)
+                                        parameters["SelectionListLock"] = (0,2,36,36)
+                                        parameters["ConfigListSeperator"] = 300
+                                        parameters["VirtualKeyboard"] = (68,68)
+                                        parameters["PartnerBoxEntryListName"] = (8,2,225,38)
+                                        parameters["PartnerBoxEntryListIP"] = (180,2,225,38)
+                                        parameters["PartnerBoxEntryListPort"] = (405,2,150,38)
+                                        parameters["PartnerBoxEntryListType"] = (615,2,150,38)
+                                        parameters["PartnerBoxTimerServicename"] = (0,0,45)
+                                        parameters["PartnerBoxTimerName"] = (0,42,30)
+                                        parameters["PartnerBoxE1TimerTime"] = (0,78,255,30)
+                                        parameters["PartnerBoxE1TimerState"] = (255,78,255,30)
+                                        parameters["PartnerBoxE2TimerTime"] = (0,78,225,30)
+                                        parameters["PartnerBoxE2TimerState"] = (225,78,225,30)
+                                        parameters["PartnerBoxE2TimerIcon"] = (1050,8,20,20)
+                                        parameters["PartnerBoxE2TimerIconRepeat"] = (1050,38,20,20)
+                                        parameters["PartnerBoxBouquetListName"] = (0,0,45)
+                                        parameters["PartnerBoxChannelListName"] = (0,0,45)
+                                        parameters["PartnerBoxChannelListTitle"] = (0,42,30)
+                                        parameters["PartnerBoxChannelListTime"] = (0,78,225,30)
+                                        parameters["HelpMenuListHlp"] = (0,0,900,42)
+                                        parameters["HelpMenuListExtHlp0"] = (0,0,900,39)
+                                        parameters["HelpMenuListExtHlp1"] = (0,42,900,30)
+                                        parameters["AboutHddSplit"] = 1
+                                        parameters["DreamexplorerName"] = (62,0,1200,38)
+                                        parameters["DreamexplorerIcon"] = (15,4,30,30)
+                                        parameters["PicturePlayerThumb"] = (30,285,45,300,30,25)
+                                        parameters["PlayListName"] = (38,2,1000,34)
+                                        parameters["PlayListIcon"] = (7,7,24,24)
+                                        parameters["SHOUTcastListItem"] = (30,27,35,96,35,33,60,32)
 
-    for skininclude in skin.findall('include'):
-        filename = skininclude.attrib.get('filename')
-        if filename:
-            skinfile = resolveFilename(SCOPE_CURRENT_SKIN, filename, path_prefix=path_prefix)
-            if not fileExists(skinfile):
-                skinfile = resolveFilename(SCOPE_SKIN_IMAGE, filename, path_prefix=path_prefix)
-            if fileExists(skinfile):
-                print '[SKIN] loading include:', skinfile
-                loadSkin(skinfile)
+        for skininclude in skin.findall("include"):
+                filename = skininclude.attrib.get("filename")
+                if filename:
+                        skinfile = resolveFilename(SCOPE_CURRENT_SKIN, filename, path_prefix=path_prefix)
+                        if not fileExists(skinfile):
+                                skinfile = resolveFilename(SCOPE_SKIN_IMAGE, filename, path_prefix=path_prefix)
+                        if fileExists(skinfile):
+                                print "[SKIN] loading include:", skinfile
+                                loadSkin(skinfile)
 
-    for c in skin.findall('colors'):
-        for color in c.findall('color'):
-            get_attr = color.attrib.get
-            name = get_attr('name')
-            color = get_attr('value')
-            if name and color:
-                colorNames[name] = parseColor(color)
-            else:
-                raise SkinError('need color and name, got %s %s' % (name, color))
+        for c in skin.findall("colors"):
+                for color in c.findall("color"):
+                        get_attr = color.attrib.get
+                        name = get_attr("name")
+                        color = get_attr("value")
+                        if name and color:
+                                colorNames[name] = parseColor(color)
+                                #print "Color:", name, color
+                        else:
+                                raise SkinError("need color and name, got %s %s" % (name, color))
 
-    for c in skin.findall('fonts'):
-        for font in c.findall('font'):
+        for c in skin.findall("fonts"):
+         for font in c.findall('font'):
             get_attr = font.attrib.get
             filename = get_attr('filename', '<NONAME>')
             name = get_attr('name', 'Regular')
@@ -569,8 +570,8 @@ def loadSingleSkinData(desktop, skin, path_prefix):
             except Exception as ex:
                 print '[SKIN] bad font alias', ex
 
-    for c in skin.findall('parameters'):
-        for parameter in c.findall('parameter'):
+        for c in skin.findall('parameters'):
+         for parameter in c.findall('parameter'):
             get = parameter.attrib.get
             try:
                 name = get('name')
@@ -579,10 +580,10 @@ def loadSingleSkinData(desktop, skin, path_prefix):
             except Exception as ex:
                 print '[SKIN] bad parameter', ex
 
-    for c in skin.findall('subtitles'):
-        from enigma import eSubtitleWidget
-        scale = ((1, 1), (1, 1))
-        for substyle in c.findall('sub'):
+        for c in skin.findall('subtitles'):
+         from enigma import eSubtitleWidget
+         scale = ((1, 1), (1, 1))
+         for substyle in c.findall('sub'):
             get_attr = substyle.attrib.get
             font = parseFont(get_attr('font'), scale)
             col = get_attr('foregroundColor')
@@ -605,23 +606,23 @@ def loadSingleSkinData(desktop, skin, path_prefix):
             face = eSubtitleWidget.__dict__[get_attr('name')]
             eSubtitleWidget.setFontStyle(face, font, haveColor, foregroundColor, borderColor, borderWidth)
 
-    for windowstyle in skin.findall('windowstyle'):
-        style = eWindowStyleSkinned()
-        style_id = windowstyle.attrib.get('id')
-        if style_id:
+        for windowstyle in skin.findall('windowstyle'):
+         style = eWindowStyleSkinned()
+         style_id = windowstyle.attrib.get('id')
+         if style_id:
             style_id = int(style_id)
-        else:
+         else:
             style_id = 0
-        font = gFont('Regular', 20)
-        offset = eSize(20, 5)
-        for title in windowstyle.findall('title'):
+         font = gFont('Regular', 20)
+         offset = eSize(20, 5)
+         for title in windowstyle.findall('title'):
             get_attr = title.attrib.get
             offset = parseSize(get_attr('offset'), ((1, 1), (1, 1)))
             font = parseFont(get_attr('font'), ((1, 1), (1, 1)))
 
-        style.setTitleFont(font)
-        style.setTitleOffset(offset)
-        for borderset in windowstyle.findall('borderset'):
+         style.setTitleFont(font)
+         style.setTitleOffset(offset)
+         for borderset in windowstyle.findall('borderset'):
             bsName = str(borderset.attrib.get('name'))
             for pixmap in borderset.findall('pixmap'):
                 get_attr = pixmap.attrib.get
@@ -631,7 +632,7 @@ def loadSingleSkinData(desktop, skin, path_prefix):
                     png = loadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, filename, path_prefix=path_prefix), desktop)
                     style.setPixmap(eWindowStyleSkinned.__dict__[bsName], eWindowStyleSkinned.__dict__[bpName], png)
 
-        for color in windowstyle.findall('color'):
+         for color in windowstyle.findall('color'):
             get_attr = color.attrib.get
             colorType = get_attr('name')
             color = parseColor(get_attr('color'))
@@ -640,29 +641,29 @@ def loadSingleSkinData(desktop, skin, path_prefix):
             except:
                 raise SkinError("Unknown color %s" % colorType)
 
-        x = eWindowStyleManager.getInstance()
-        x.setStyle(style_id, style)
+         x = eWindowStyleManager.getInstance()
+         x.setStyle(style_id, style)
 
-    for margin in skin.findall('margin'):
-        style_id = margin.attrib.get('id')
-        if style_id:
+        for margin in skin.findall('margin'):
+         style_id = margin.attrib.get('id')
+         if style_id:
             style_id = int(style_id)
-        else:
+         else:
             style_id = 0
-        r = eRect(0, 0, 0, 0)
-        v = margin.attrib.get('left')
-        if v:
+         r = eRect(0, 0, 0, 0)
+         v = margin.attrib.get('left')
+         if v:
             r.setLeft(int(v))
-        v = margin.attrib.get('top')
-        if v:
+         v = margin.attrib.get('top')
+         if v:
             r.setTop(int(v))
-        v = margin.attrib.get('right')
-        if v:
+         v = margin.attrib.get('right')
+         if v:
             r.setRight(int(v))
-        v = margin.attrib.get('bottom')
-        if v:
+         v = margin.attrib.get('bottom')
+         if v:
             r.setBottom(int(v))
-        getDesktop(style_id).setMargins(r)
+         getDesktop(style_id).setMargins(r)
 
 
 dom_screens = {}
