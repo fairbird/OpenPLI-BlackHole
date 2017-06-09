@@ -178,6 +178,10 @@ class TranslationInfo(Screen):
 
     def __init__(self, session):
         Screen.__init__(self, session)
+	self.setTitle(_('Translation'))
+  	# don't remove the string out of the _(), or it can't be "translated" anymore.
+  
+  	# TRANSLATORS: Add here whatever should be shown in the "translator" about screen, up to 6 lines (use \n for newline)
         info = _('TRANSLATOR_INFO')
         if info == 'TRANSLATOR_INFO':
             info = '(N/A)'
@@ -205,6 +209,7 @@ class CommitInfo(Screen):
 
     def __init__(self, session):
         Screen.__init__(self, session)
+        self.setTitle(_('Latest Commits'))
         self.skinName = ['CommitInfo', 'About']
         self['AboutScrollLabel'] = ScrollLabel(_('Please wait'))
         self['actions'] = ActionMap(['SetupActions', 'DirectionActions'], {'cancel': self.close,
