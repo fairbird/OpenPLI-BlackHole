@@ -20,7 +20,8 @@ class About(Screen):
     def __init__(self, session):
         Screen.__init__(self, session)
         self.setTitle(_('About'))
-        hddsplit, = skin.parameters.get('AboutHddSplit', (0,))
+        hddsplit = skin.parameters.get('AboutHddSplit', 0)
+
         bhVer = 'Black Hole'
         f = open('/etc/imageversion', 'r')
         bhVer = f.readline().strip()
