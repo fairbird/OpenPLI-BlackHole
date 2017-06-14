@@ -180,7 +180,7 @@ def InitUsageConfig():
      ('popup', _('With popup')),
      ('without popup', _('Without popup')),
      ('movielist', _('Return to movie list'))])
-    config.usage.setup_level = ConfigSelection(default='expert', choices=[('simple', _('Simple')), ('intermediate', _('Intermediate')), ('expert', _('Expert'))])
+    config.usage.setup_level = ConfigSelection(default='expert', choices=[('simple', _('Normal')), ('intermediate', _('Advanced')), ('expert', _('Expert'))])
     config.usage.startup_to_standby = ConfigSelection(default='no', choices=[('no', _('No')), ('yes', _('Yes')), ('except', _('No, except Wakeup timer'))])
     config.usage.wakeup_menu = ConfigNothing()
     config.usage.wakeup_enabled = ConfigYesNo(default=False)
