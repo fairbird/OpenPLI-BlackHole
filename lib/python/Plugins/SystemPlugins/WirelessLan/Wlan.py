@@ -5,11 +5,8 @@ from Components.Network import iNetwork
 import enigma
 
 import os
-import sys
-import types
 from string import maketrans, strip
-from re import compile as re_compile, search as re_search, escape as re_escape
-from pythonwifi.iwlibs import getNICnames, Wireless, Iwfreq, getWNICnames
+from pythonwifi.iwlibs import Wireless, getWNICnames
 from pythonwifi import flags as wififlags
 
 list = []
@@ -74,7 +71,7 @@ class Wlan:
 				iNetwork.setAdapterAttribute(self.iface, "up", True)
 				enigma.eConsoleAppContainer().execute("ifconfig %s up" % self.iface)
 				if existBcmWifi(self.iface):
- 					enigma.eConsoleAppContainer().execute("wl up")
+					enigma.eConsoleAppContainer().execute("wl up")
 
 		ifobj = Wireless(self.iface) # a Wireless NIC Object
 
@@ -109,7 +106,7 @@ class Wlan:
 						signal = element[element.index('SignalStrength')+15:element.index(',L')]
 					if 'LinkQuality' in element:
 						quality = element[element.index('LinkQuality')+12:len(element)]
-						
+
 				channel = "Unknown"
 				try:
 					channel = frequencies.index(ifobj._formatFrequency(result.frequency.getFrequency())) + 1
@@ -138,7 +135,7 @@ class Wlan:
 				iNetwork.setAdapterAttribute(self.iface, "up", False)
 				enigma.eConsoleAppContainer().execute("ifconfig %s down" % self.iface)
 				if existBcmWifi(self.iface):
- 					enigma.eConsoleAppContainer().execute("wl down")
+					enigma.eConsoleAppContainer().execute("wl down")
 				self.oldInterfaceState = None
 				self.iface = None
 
@@ -147,7 +144,7 @@ iWlan = Wlan()
 class wpaSupplicant:
 	def __init__(self):
 		pass
-	
+
 	def writeBcmWifiConfig(self, iface, essid, encryption, psk):
 		contents = ""
 		contents += "ssid="+essid+"\n"
@@ -209,10 +206,10 @@ class wpaSupplicant:
 		encryption = config.plugins.wlan.encryption.value
 		wepkeytype = config.plugins.wlan.wepkeytype.value
 		psk = config.plugins.wlan.psk.value
-		
+
 		if existBcmWifi(iface):
- 			self.writeBcmWifiConfig(iface, essid, encryption, psk)
- 			return
+			self.writeBcmWifiConfig(iface, essid, encryption, psk)
+			return
 
 		fp = file(getWlanConfigName(iface), 'w')
 		fp.write('#WPA Supplicant Configuration by enigma2\n')
@@ -432,7 +429,7 @@ class Status:
 		self.backupwlaniface = self.wlaniface
 
 		if self.WlanConsole is not None:
-			if len(self.WlanConsole.appContainers) == 0:
+			if not self.WlanConsole.appContainers:
 				print "[Wlan.py] self.wlaniface after loading:", self.wlaniface
 				if self.statusCallback is not None:
 						self.statusCallback(True,self.wlaniface)
@@ -441,7 +438,7 @@ class Status:
 	def getAdapterAttribute(self, iface, attribute):
 		self.iface = iface
 		if self.iface in self.wlaniface and attribute in self.wlaniface[self.iface]:
- 			return self.wlaniface[self.iface][attribute]
+			return self.wlaniface[self.iface][attribute]
 		return None
 
 iStatus = Status()

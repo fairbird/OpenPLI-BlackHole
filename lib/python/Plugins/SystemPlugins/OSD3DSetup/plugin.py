@@ -129,7 +129,8 @@ def main(session, **kwargs):
 	session.open(OSD3DSetupScreen)
 
 def startSetup(menuid):
-	if menuid != "video":
+	# show only in the menu when set at expert level
+	if menuid != "video" or config.usage.setup_level.index < 2:
 		return [ ]
 	return [(_("OSD 3D setup"), main, "auto_3d_setup", 0)]
 

@@ -5,7 +5,8 @@ def videoFinetuneMain(session, **kwargs):
 	session.open(VideoFinetune)
 
 def startSetup(menuid):
-	if menuid != "video":
+	# show only in the menu when set at expert level
+	if menuid != "video" or config.usage.setup_level.index < 2:
 		return [ ]
 
 	return [(_("Testscreens"), videoFinetuneMain, "video_finetune", None)]
