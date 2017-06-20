@@ -680,7 +680,7 @@ class DeliteExtdatSetup(Screen, ConfigListScreen):
         self['config'].l.setList(self.list)
 
     def saveMyprov(self):
-        if self.url.value.find('.dat.gz') == -1 and self.url.value.find('.dat.bz2') == -1:
+        if self.url.value.find('.dat.gz') == -1 and self.url.value.find('.dat.bz2') == -1 and self.url.value.find('datru.gz') == -1 and self.url.value.find('datallru.gz') == -1 and self.url.value.find('datfull.gz') == -1 and self.url.value.find('ru.dat.gz') == -1 and self.url.value.find('ua.dat.gz') == -1 and self.url.value.find('datua.gz') == -1 and self.url.value.find('datallua.gz') == -1:
             msg = _('Wrong file format.\n  Only epg.dat gzip and bzip2 files are allowed (.dat.gz .dat.bz2).')
             self.session.open(MessageBox, msg, MessageBox.TYPE_ERROR)
             return
@@ -1050,6 +1050,20 @@ class DeliteDownEpgNow(Screen):
                 myext = '.gz'
             elif myurl.find('.dat.bz2') != -1:
                 myext = '.bz2'
+            elif myurl.find('.datallru.gz') != -1:
+                myext = '.gz'
+            elif myurl.find('.datfull.gz') != -1:
+                myext = '.gz'
+            elif myurl.find('.datru.gz') != -1:
+                myext = '.gz'
+            elif myurl.find('.datallua.gz') != -1:
+                myext = '.gz'
+            elif myurl.find('.datua.gz') != -1:
+                myext = '.gz'
+            elif myurl.find('.ua.dat.gz') != -1:
+                myext = '.gz'
+            elif myurl.find('ru.dat.gz') != -1:
+                myext = '.gz'
             else:
                 self.session.open(MessageBox, _('Wrong file format. Only bz2 and gzip files are allowed (.dat.gz .dat.bz2).'), MessageBox.TYPE_ERROR)
                 self.close()
