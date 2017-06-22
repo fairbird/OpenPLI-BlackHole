@@ -159,7 +159,7 @@ int eDVBServiceStream::doRecord()
 		if (!ref.valid())
 			ref = m_ref;
 
-		if(!eDVBDB::getInstance()->getService(ref, service))
+		if (!eDVBDB::getInstance()->getService(ref, service) && !service->usePMT())
 		{
 			// cached pids
 			for (int x = 0; x < eDVBService::cacheMax; ++x)
