@@ -125,7 +125,7 @@ RESULT eServiceHDMI::start()
 	m_decoder = new eTSMPEGDecoder(NULL, m_decoder_index);
 	m_decoder->setVideoPID(1, 0);
 	if (!m_noaudio)
- 		m_decoder->setAudioPID(1, 0);
+		m_decoder->setAudioPID(1, 0);
 	m_decoder->play();
 	m_event(this, evStart);
 	return 0;
