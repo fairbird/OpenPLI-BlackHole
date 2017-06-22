@@ -19,6 +19,7 @@ eDVBServiceRecord::eDVBServiceRecord(const eServiceReferenceDVB &ref, bool isstr
 	m_state = stateIdle;
 	m_want_record = 0;
 	m_record_ecm = false;
+	m_packet_size = 188;
 	m_descramble = true;
 	m_is_stream_client = isstreamclient;
 	m_is_pvr = !m_ref.path.empty() && !m_is_stream_client;
@@ -86,7 +87,7 @@ void eDVBServiceRecord::serviceEvent(int event)
 
 #define HILO(x) (x##_hi << 8 | x##_lo)
 
-RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t endTime, int eit_event_id, const char *name, const char *descr, const char *tags, bool descramble, bool recordecm)
+RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t endTime, int eit_event_id, const char *name, const char *descr, const char *tags, bool descramble, bool recordecm, int packetsize)
 {
 	bool config_recording_always_ecm = eConfigManager::getConfigBoolValue("config.recording.always_ecm", false);
 	bool config_recording_never_decrypt = eConfigManager::getConfigBoolValue("config.recording.never_decrypt", false);
@@ -95,6 +96,7 @@ RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t e
 	m_streaming = 0;
 	m_descramble = config_recording_never_decrypt ? false : descramble;
 	m_record_ecm = config_recording_always_ecm ? true : recordecm;
+	m_packet_size = packetsize;
 
 	if (m_state == stateIdle)
 	{
@@ -142,6 +144,7 @@ RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t e
 			if (tags)
 				meta.m_tags = tags;
 			meta.m_scrambled = !m_descramble;
+			meta.m_packet_size = m_packet_size;
 			ret = meta.updateMeta(filename) ? -255 : 0;
 			if (!ret)
 			{
@@ -309,7 +312,7 @@ int eDVBServiceRecord::doRecord()
 			::close(fd);
 			return errNoDemuxAvailable;
 		}
-		demux->createTSRecorder(m_record);
+		demux->createTSRecorder(m_record, m_packet_size);
 		if (!m_record)
 		{
 			eDebug("[eDVBServiceRecord] no ts recorder available.");
