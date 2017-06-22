@@ -28,7 +28,7 @@ void eDVBServiceStream::serviceEvent(int event)
 	{
 	case eDVBServicePMTHandler::eventTuned:
 	{
-		eDebug("[eDVBServiceStream] tuned..");
+		eDebug("[eDVBServiceStream] tuned.. m_state %d m_want_record %d", m_state, m_want_record);
 		m_tuned = 1;
 
 			/* start feeding EIT updates */
@@ -39,7 +39,7 @@ void eDVBServiceStream::serviceEvent(int event)
 			m_event_handler.start(m_demux, ref);
 		}
 
-		if (m_state == stateRecording && m_want_record)
+		if (m_state > stateIdle && m_want_record)
 			doRecord();
 		break;
 	}
@@ -78,7 +78,7 @@ int eDVBServiceStream::start(const char *serviceref, int fd)
 
 RESULT eDVBServiceStream::stop()
 {
-	eDebug("[eDVBServiceStream] stop streaming");
+	eDebug("[eDVBServiceStream] stop streaming m_state %d", m_state);
 
 	if (m_state == stateRecording)
 	{
@@ -118,11 +118,15 @@ int eDVBServiceStream::doRecord()
 	int err = doPrepare();
 	if (err)
 	{
+		eDebug("[eDVBServiceStream] doPrerare err %d", err);
 		return err;
 	}
 
 	if (!m_tuned)
+	{
+		eDebug("[eDVBServiceStream] try it again when we are tuned in");
 		return 0; /* try it again when we are tuned in */
+	}
 
 	if (!m_record && m_tuned)
 	{
