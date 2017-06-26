@@ -47,7 +47,8 @@ class About(Screen):
 
         AboutText += _('Hardware: ') + about.getHardwareTypeString() + '\n'
         AboutText += _('CPU: ') + about.getCPUInfoString() + '\n'
-        AboutText += _('Installed: ') + about.getFlashDateString() + '\n'
+        # [WanWizard] Removed until we find a reliable way to determine the installation date
+	# AboutText += _("Installed: ") + about.getFlashDateString() + "\n"
         AboutText += _('Kernel version: ') + about.getKernelVersionString() + '\n'
 
         self["EnigmaVersion"] = StaticText("Enigma: " + about.getEnigmaVersionString())
