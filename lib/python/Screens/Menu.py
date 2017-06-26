@@ -59,12 +59,12 @@ class Menu(Screen, ProtectedScreen):
     ALLOW_SUSPEND = True
 
     def okbuttonClick(self):
-		if self.number:
-			self["menu"].setIndex(self.number - 1)
-		self.resetNumberKey()
-		selection = self["menu"].getCurrent()
-		if selection and selection[1]:
-			selection[1]()
+        if self.number:
+            self["menu"].setIndex(self.number - 1)
+        self.resetNumberKey()
+        selection = self["menu"].getCurrent()
+        if selection and selection[1]:
+            selection[1]()
 
     def execText(self, text):
         exec text
@@ -160,6 +160,8 @@ class Menu(Screen, ProtectedScreen):
     def menuClosed(self, *res):
         if res and res[0]:
             self.close(True)
+        else:
+            self.createMenuList()
 
     def addItem(self, destList, node):
         requires = node.get('requires')
