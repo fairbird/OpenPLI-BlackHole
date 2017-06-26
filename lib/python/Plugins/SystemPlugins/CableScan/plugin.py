@@ -16,8 +16,8 @@ from enigma import eCableScan, eDVBFrontendParametersCable, eTimer
 
 class CableScan:
 	def __init__(self, text, progressbar, scanTuner, scanNetwork, scanFrequency, scanSymbolRate, scanModulation, keepNumbers, hdList):
-		self.text = text;
-		self.progressbar = progressbar;
+		self.text = text
+		self.progressbar = progressbar
 		self.scanTuner = scanTuner
 		self.scanNetwork = scanNetwork
 		self.scanFrequency = scanFrequency
@@ -248,11 +248,7 @@ def getNimList():
 	return [x for x in nimmanager.getNimListOfType("DVB-C") if config.Nims[x].configMode.value != "nothing"]
 
 def CableScanMain(session, **kwargs):
-	nimlist = getNimList()
-	if nimlist:
-		Session.open(CableScanScreen, nimlist)
-	else:
-		Session.open(MessageBox, _("No cable tuner found!"), type=MessageBox.TYPE_ERROR)
+		Session.open(CableScanScreen, getNimList())
 
 def restartScanAutoStartTimer(reply=False):
 	if reply:
