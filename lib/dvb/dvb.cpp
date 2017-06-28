@@ -2128,7 +2128,6 @@ RESULT eDVBChannel::playSource(ePtr<iTsSource> &source, const char *streaminfo_f
 	if (m_pvr_thread)
 	{
 		m_pvr_thread->stop();
-		delete m_pvr_thread;
 		m_pvr_thread = 0;
 	}
 
@@ -2181,7 +2180,6 @@ void eDVBChannel::stop()
 	if (m_pvr_thread)
 	{
 		m_pvr_thread->stop();
-		delete m_pvr_thread;
 		m_pvr_thread = 0;
 	}
 	if (m_pvr_fd_dst >= 0)
