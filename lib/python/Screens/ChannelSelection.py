@@ -177,9 +177,9 @@ class ChannelContextMenu(Screen):
                         if config.ParentalControl.hideBlacklist.value and not self.parentalControl.sessionPinCached and config.ParentalControl.storeservicepin.value != "never":
                             if parentalControl.blacklist:
                                 extra_text = ""
-                    if config.ParentalControl.hideBouquets.value and self.parentalControl.hideBouquets > 0:
-                        extra_text = "/" + _("bouquets")
-                    append_when_current_valid(current, menu, (_("Unhide parental control services") + extra_text, self.unhideParentalServices), level=0, key="1")
+                                if config.ParentalControl.hideBouquets.value and self.parentalControl.hideBouquets > 0:
+                                    extra_text = "/" + _("bouquets")
+                                append_when_current_valid(current, menu, (_("Unhide parental control services") + extra_text, self.unhideParentalServices), level=0, key="1")
                     if SystemInfo['3DMode'] and fileExists('/usr/lib/enigma2/python/Plugins/SystemPlugins/OSD3DSetup/plugin.py'):
                         if eDVBDB.getInstance().getFlag(eServiceReference(current.toString())) & FLAG_IS_DEDICATED_3D:
                             append_when_current_valid(current, menu, (_('Unmark service as dedicated 3D service'), self.removeDedicated3DFlag), level=0)
