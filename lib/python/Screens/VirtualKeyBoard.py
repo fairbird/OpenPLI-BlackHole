@@ -4,6 +4,7 @@ from Screen import Screen
 from Components.Language import language
 from Components.ActionMap import NumberActionMap
 from Components.Sources.StaticText import StaticText
+from Components.Input import Input
 from Components.Label import Label
 from Components.Pixmap import Pixmap
 from Components.MenuList import MenuList
@@ -11,6 +12,7 @@ from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixm
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
 from Tools.LoadPixmap import LoadPixmap
 from Tools.NumericalTextInput import NumericalTextInput
+import skin
 
 class VirtualKeyBoardList(MenuList):
 	def __init__(self, list, enableWrapAround=False):
@@ -70,21 +72,20 @@ def VirtualKeyBoardEntryComponent(keys, selectedKey, shiftMode=False):
 
 class VirtualKeyBoard(Screen):
 
-	def __init__(self, session, title="", text=""):
+	def __init__(self, session, title="", **kwargs):
 		Screen.__init__(self, session)
+		self.setTitle(_("Virtual keyboard"))
 		self.keys_list = []
 		self.shiftkeys_list = []
 		self.lang = language.getLanguage()
 		self.nextLang = None
 		self.shiftMode = False
-		self.text = text
 		self.selectedKey = 0
 		self.smsChar = None
-		self.sms = NumericalTextInput(self.smsOK)
-		
+		self.sms = NumericalTextInput(self.smsOK)		
 		self["country"] = StaticText("")
 		self["header"] = Label(title)
-		self["text"] = Label(self.text)
+		self["text"] = Input(currPos=len(kwargs.get("text", "").decode("utf-8",'ignore')), allMarked=False, **kwargs)
 		self["list"] = VirtualKeyBoardList([])
 		
 		self["actions"] = NumberActionMap(["OkCancelActions", "WizardActions", "ColorActions", "KeyboardInputActions", "InputBoxActions", "InputAsciiActions"],
@@ -119,6 +120,10 @@ class VirtualKeyBoard(Screen):
 		self.setLang()
 		self.onExecBegin.append(self.setKeyboardModeAscii)
 		self.onLayoutFinish.append(self.buildVirtualKeyBoard)
+		self.onClose.append(self.__onClose)
+
+	def __onClose(self):
+		self.sms.timer.stop()
 	
 	def switchLang(self):
 		self.lang = self.nextLang
@@ -375,57 +380,41 @@ class VirtualKeyBoard(Screen):
 
 	def okClicked(self):
 		self.smsChar = None
-		if self.shiftMode:
-			list = self.shiftkeys_list
-		else:
-			list = self.keys_list
-		
-		selectedKey = self.selectedKey
-
-		text = None
-
-		for x in list:
-			if selectedKey < 12:
-				if selectedKey < len(x):
-					text = x[selectedKey]
-				break
-			else:
-				selectedKey -= 12
-
-		if text is None:
-			return
-
-		text = text.encode("UTF-8")
+		text = (self.shiftMode and self.shiftkeys_list or self.keys_list)[self.selectedKey / 12][self.selectedKey % 12].encode("UTF-8")
 
 		if text == "EXIT":
 			self.close(None)
-		
+
 		elif text == "BACKSPACE":
-			ss=unicode(self["text"].getText(),"utf-8")
-			ss=ss[:-1]
-			self.text = str(ss.encode("utf-8"))
-			self["text"].setText(self.text)
-		
+			self["text"].deleteBackward()
+
+		elif text == "ALL":
+			self["text"].markAll()
+
 		elif text == "CLEAR":
-			self.text = ""
-			self["text"].setText(self.text.encode("utf-8"))
-		
+			self["text"].deleteAllChars()
+			self["text"].update()
+
 		elif text == "SHIFT":
 			self.shiftClicked()
-		
+
 		elif text == "SPACE":
-			self.text += " "
-			self["text"].setText(self.text.encode("utf-8"))
-		
+			self["text"].char(" ".encode("UTF-8"))
+
 		elif text == "OK":
-			self.close(self.text.encode("utf-8"))
-		
+			self.close(self["text"].getText())
+
+		elif text == "LEFT":
+			self["text"].left()
+
+		elif text == "RIGHT":
+			self["text"].right()
+
 		else:
-			self.text += text
-			self["text"].setText(self.text.encode("utf-8"))
+			self["text"].char(text)
 
 	def ok(self):
-		self.close(self.text.encode("utf-8"))
+		self.close(self["text"].getText())
 
 	def exit(self):
 		self.close(None)
