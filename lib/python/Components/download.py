@@ -7,7 +7,6 @@ from Tools.Directories import fileExists, SCOPE_SKIN_IMAGE, SCOPE_CURRENT_PLUGIN
 from os import path as os_path, statvfs as os_statvfs, system as os_system, remove as os_remove
 from enigma import eConsoleAppContainer, getDesktop
 from multInstaller import TSGetMultiipk
-
 tslang_changed = '/tmp/.newlang'
 opkg_ready_filename = '/tmp/.opkg_ready'
 opkg_list_filename = '/tmp/.opkglist'
@@ -177,21 +176,18 @@ class TSilangGroups(Screen):
 
     def downloadxmlpage(self, result = True):
         if os_path.exists(opkg_ready_filename):
-            os_remove(opkg_ready_filename)
-        if os_path.exists(opkg_list_filename):
-            os_remove(opkg_list_filename)
-        print '[opkg update] start'
-        cmd = 'touch %s ; opkg update' % opkg_ready_filename
-        os_system(cmd)
-        cmd = "opkg list | grep -E 'enigma2-language-' > " + opkg_list_filename
-        os_system(cmd)
+           if not os_path.exists(opkg_list_filename):
+              print '[update opkg list filename] start'
+              cmd = "opkg list | grep -E 'enigma2-language-' > " + opkg_list_filename
+              os_system(cmd)
         if not os_path.exists(opkg_ready_filename):
-            print '[MultiIpk RessourcesCheck] resources busy...'
-            cmd = 'echo\n'
-            self['info'].setText('Please wait while language pack is being downloaded...')
-            self.container = eConsoleAppContainer()
-            self.container.appClosed.append(self.downloadxmlpage)
-            self.container.execute(cmd)
+           print '[opkg update] start'
+           cmd = 'touch %s ; opkg update' % opkg_ready_filename
+           os_system(cmd)
+           self['info'].setText('Please wait while language pack is being downloaded...')
+           self.container = eConsoleAppContainer()
+           self.container.appClosed.append(self.downloadxmlpage)
+           self.container.execute(cmd)
         else:
             self.opkglist_filename = '/tmp/.tmplist'
             cmd = "cat /tmp/.opkglist | grep 'enigma2-language-' > /tmp/.tmplist"
