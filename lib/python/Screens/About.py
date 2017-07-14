@@ -262,7 +262,7 @@ class CommitInfo(Screen):
             commitlog = commitlog.encode('utf-8')
             self.cachedProjects[self.projects[self.project][1]] = commitlog
         except:
-            commitlog += _('You are using Black Hole Image To Drembox' '\n\n' 'Built By RAED' '\n\n' 'Supported' '\n' 'rrrr53@hotmail.com' '\n\n' 'Enjoy')
+            commitlog += _('You are using Black Hole Image To Dreambox' '\n\n' 'Built By RAED' '\n\n' 'Support' '\n' 'e-mail: rrrr53@hotmail.com' '\n' 'Arabic : www.tunisia-sat.com' '\n' 'English: www.ourdreambox.com' '\n\n' 'Enjoy')
 
         self['AboutScrollLabel'].setText(commitlog)
 
