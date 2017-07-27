@@ -332,10 +332,10 @@ class SecConfigure:
                                         sec.setLNBLOFL(10750000)
                                         sec.setLNBLOFH(10750000)
                                         sec.setLNBThreshold(10750000)
-				elif currLnb.lof.value == "ka_sat":
-					sec.setLNBLOFL(21200000)
-					sec.setLNBLOFH(21200000)
-					sec.setLNBThreshold(21200000)
+                                elif currLnb.lof.value == "ka_sat":
+                                        sec.setLNBLOFL(21200000)
+                                        sec.setLNBLOFH(21200000)
+                                        sec.setLNBThreshold(21200000)
 
                                 if currLnb.increased_voltage.value:
                                         sec.setLNBIncreasedVoltage(True)
@@ -543,8 +543,8 @@ class NIM(object):
                         }
                 return connectable[self.getType()]
 
-	def getSlotID(self, slot=None):
-		return chr(ord('A') + (slot if slot is not None else self.slot))
+        def getSlotID(self, slot=None):
+                return chr(ord('A') + (slot if slot is not None else self.slot))
 
         def getSlotName(self, slot=None):
                 # get a friendly description for a slot name.
@@ -603,8 +603,8 @@ class NIM(object):
         def isFBCLink(self):
                 return self.isFBCTuner() and not (self.slot % 8 < (self.getType() == "DVB-C" and 1 or 2))
 
-	def isNotFirstFBCTuner(self):
-		return self.isFBCTuner() and self.slot % 8 and True
+        def isNotFirstFBCTuner(self):
+                return self.isFBCTuner() and self.slot % 8 and True
 
         def getFriendlyType(self):
                 return self.getType() or _("empty")
@@ -618,16 +618,16 @@ class NIM(object):
         def getFriendlyFullDescriptionCompressed(self):
                 if self.isFBCTuner():
                         return "%s-%s: %s" % (self.getSlotName(self.slot & ~7), self.getSlotID((self.slot & ~7) + 7), self.getFullDescription())
-		#compress by combining dual tuners by checking if the next tuner has a rf switch
+                #compress by combining dual tuners by checking if the next tuner has a rf switch
                 elif self.frontend_id is not None and os.access("/proc/stb/frontend/%d/rf_switch" % (self.frontend_id + 1), os.F_OK):
                         return "%s-%s: %s" % (self.slot_name, self.getSlotID(self.slot + 1), self.getFullDescription())
                 return self.getFriendlyFullDescription()
 
-	slot_id = property(getSlotID)
-	slot_name = property(getSlotName)
+        slot_id = property(getSlotID)
+        slot_name = property(getSlotName)
         friendly_full_description = property(getFriendlyFullDescription)
         friendly_full_description_compressed = property(getFriendlyFullDescriptionCompressed)
-	friendly_type = property(getFriendlyType)
+        friendly_type = property(getFriendlyType)
         config_mode = property(lambda self: config.Nims[self.slot].configMode.value)
         config = property(lambda self: config.Nims[self.slot])
         empty = property(lambda self: self.getType() is None)
@@ -660,17 +660,53 @@ class NimManager:
                         return self.transpondersatsc[self.atscList[nimConfig.atsc.index][0]]
                 return []
 
+        def getCablesList(self):
+                return self.cablesList
+
+        def getCablesCountrycodeList(self):
+                countrycodes = []
+                for x in self.cablesList:
+                        if x[2] and x[2] not in countrycodes:
+                                countrycodes.append(x[2])
+                return countrycodes
+
+        def getCablesByCountrycode(self, countrycode):
+                if countrycode:
+                        return [x for x in self.cablesList if x[2] == countrycode]
+                return []
+
         def getCableDescription(self, nim):
                 return self.cablesList[config.Nims[nim].cable.scan_provider.index][0]
 
         def getCableFlags(self, nim):
                 return self.cablesList[config.Nims[nim].cable.scan_provider.index][1]
 
+        def getCableCountrycode(self, nim):
+                return self.cablesList and self.cablesList[config.Nims[nim].cable.scan_provider.index][2] or None
+
+        def getTerrestrialsList(self):
+                return self.terrestrialsList
+
+        def getTerrestrialsCountrycodeList(self):
+                countrycodes = []
+                for x in self.terrestrialsList:
+                        if x[2] and x[2] not in countrycodes:
+                                countrycodes.append(x[2])
+                return countrycodes
+
+        def getTerrestrialsByCountrycode(self, countrycode):
+                if countrycode:
+                        return [x for x in self.terrestrialsList if x[2] == countrycode]
+                return []
+
         def getTerrestrialDescription(self, nim):
                 return self.terrestrialsList[config.Nims[nim].terrestrial.index][0]
 
         def getTerrestrialFlags(self, nim):
                 return self.terrestrialsList[config.Nims[nim].terrestrial.index][1]
+
+        def getTerrestrialCountrycode(self, nim):
+                return self.terrestrialsList and self.terrestrialsList[config.Nims[nim].terrestrial.index][2] or None
 
         def getSatDescription(self, pos):
                 return self.satellites[pos]
@@ -925,8 +961,8 @@ class NimManager:
                 if slotid == -1:
                         for id in range(self.getSlotCount()):
                                 if self.somethingConnected(id) and not self.nim_slots[id].isFBCLink() and self.nim_slots[id].internally_connectable != id - 1:
-					return True
-			return False
+                                        return True
+                        return False
                 else:
                         nim = config.Nims[slotid]
                         configMode = nim.configMode.value
@@ -1098,7 +1134,7 @@ def InitNimManager(nimmgr, update_slots = []):
                 "unicable": _("SCR (Unicable/JESS)"),
                 "c_band": _("C-Band"),
                 "circular_lnb": _("Circular LNB"),
-		"ka_sat": _("KA-SAT"),
+                "ka_sat": _("KA-SAT"),
                 "user_defined": _("User defined")}
 
         lnb_choices_default = "universal_lnb"
