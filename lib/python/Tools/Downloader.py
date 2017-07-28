@@ -15,7 +15,7 @@ class HTTPProgressDownloader(client.HTTPDownloader):
 		else:
 			client.HTTPDownloader.noPage(self, reason)
 		if self.error_callback:
-			self.error_callback(reason.getErrorMessage(), self.statu
+			self.error_callback(reason.getErrorMessage(), self.status)
 
 	def gotHeaders(self, headers):
 		if self.status == "200":
