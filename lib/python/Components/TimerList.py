@@ -45,7 +45,11 @@ class TimerList(HTMLComponent, GUIComponent, object):
 			if "autotimer" in timer.flags:
 				self.iconAutoTimer and res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, self.iconMargin / 2, self.rowSplit + (self.itemHeight - self.rowSplit - self.iconHeight) / 2, self.iconWidth, self.iconHeight, self.iconAutoTimer))
 		if timer.justplay:
-			text = repeatedtext + ((" %s "+ _("(ZAP)")) % (begin[1]))
+			if timer.pipzap:
+				extra_text = _("(ZAP as PiP)")
+			else:
+				extra_text = _("(ZAP)")
+			text = repeatedtext + ((" %s %s") % (begin[1], extra_text))
 		else:
 			text = repeatedtext + ((" %s ... %s (%d " + _("mins") + ")") % (begin[1], FuzzyTime(timer.end)[1], (timer.end - timer.begin) / 60))
 		icon = None
@@ -77,7 +81,7 @@ class TimerList(HTMLComponent, GUIComponent, object):
 			icon = self.iconDone
 
 		icon and res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, self.iconMargin / 2, (self.rowSplit - self.iconHeight) / 2, self.iconWidth, self.iconHeight, icon))
-		orbpos = self.getOrbitalPos(timer.service_ref)
+		orbpos = self.getOrbitalPos(timer.service_ref, timer.state)
 		orbposWidth = getTextBoundarySize(self.instance, self.font, self.l.getItemSize(), orbpos).width()
 		res.append((eListboxPythonMultiContent.TYPE_TEXT, self.satPosLeft, self.rowSplit, orbposWidth, self.itemHeight - self.rowSplit, 1, RT_HALIGN_LEFT|RT_VALIGN_TOP, orbpos))
 		res.append((eListboxPythonMultiContent.TYPE_TEXT, self.iconWidth + self.iconMargin, self.rowSplit, self.satPosLeft - self.iconWidth - self.iconMargin, self.itemHeight - self.rowSplit, 1, RT_HALIGN_LEFT|RT_VALIGN_TOP, state))
@@ -164,22 +168,32 @@ class TimerList(HTMLComponent, GUIComponent, object):
 	def entryRemoved(self, idx):
 		self.l.entryRemoved(idx)
 
-	def getOrbitalPos(self, ref):
+	def getOrbitalPos(self, ref, state):
 		refstr = ''
+		alternative = ''
 		if hasattr(ref, 'sref'):
 			refstr = str(ref.sref)
 		else:
 			refstr = str(ref)
-		refstr = refstr and GetWithAlternative(refstr)
+		if refstr and refstr.startswith('1:134:'):
+			alternative = " (A)"
+			if state in (1, 2) and not hasattr(ref, 'sref'):
+				current_ref = getBestPlayableServiceReference(ref.ref, eServiceReference())
+				if not current_ref:
+					return "N/A" + alternative
+				else:
+					refstr = current_ref.toString()
+			else:
+				refstr = GetWithAlternative(refstr)
 		if '%3a//' in refstr:
-			return "%s" % _("Stream")
+			return "%s" % _("Stream") + alternative
 		op = int(refstr.split(':', 10)[6][:-4] or "0",16)
 		if op == 0xeeee:
-			return "%s" % _("DVB-T")
+			return "%s" % _("DVB-T") + alternative
 		if op == 0xffff:
-			return "%s" % _("DVB-C")
+			return "%s" % _("DVB-C") + alternative
 		direction = 'E'
 		if op > 1800:
 			op = 3600 - op
 			direction = 'W'
-		return ("%d.%d\xc2\xb0%s") % (op // 10, op % 10, direction)
+		return ("%d.%d\xc2\xb0%s") % (op // 10, op % 10, direction) + alternative
