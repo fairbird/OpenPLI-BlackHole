@@ -1921,7 +1921,9 @@ class InfoBarTimeshift():
             service_name = ServiceReference(serviceref).getServiceName()
         begin_date = strftime('%Y%m%d %H%M', localtime(time()))
         filename = begin_date + ' - ' + service_name
-        if config.recording.filename_composition.value == 'short':
+        if config.recording.filename_composition.value == "event":
+	    filename = "%s - %s_%s" % (info["name"], strftime("%Y%m%d %H%M",localtime(time())), service_name)
+	elif config.recording.filename_composition.value == "short":
             filename = strftime('%Y%m%d', localtime(time())) + ' - ' + info['name']
         elif config.recording.filename_composition.value == 'long':
             filename += ' - ' + info['name'] + ' - ' + info['description']
