@@ -50,7 +50,7 @@ class NcamInfo:
 	ECMTIME = 5
 	IP_PORT = 6
 	HEAD = { NAME: _("Label"), PROT: _("Protocol"),
-		CAID_SRVID: "CAID:SrvID", SRVNAME: _("Serv.Name"),
+		CAID_SRVID: _("CAID:SrvID"), SRVNAME: _("Serv.Name"),
 		ECMTIME: _("ECM-Time"), IP_PORT: _("IP address") }
 	version = ""
 
@@ -208,7 +208,7 @@ class NcamInfo:
 					if cl.find("request").attrib.has_key("ecmtime"):
 						ecmtime = cl.find("request").attrib["ecmtime"]
 						if ecmtime == "0" or ecmtime == "":
-							ecmtime = "n/a"
+							ecmtime = _("n/a")
 						else:
 							ecmtime = str(float(ecmtime) / 1000)[:5]
 					else:
@@ -220,7 +220,7 @@ class NcamInfo:
 						else:
 							srvname_short = srvname
 					else:
-						srvname_short = "n/A"
+						srvname_short = _("n/A")
 					login = cl.find("times").attrib["login"]
 					online = cl.find("times").attrib["online"]
 					if proto.lower() == "dvbapi":
@@ -279,10 +279,10 @@ class NcamInfo:
 			if data.attrib.has_key("version"):
 				self.version = data.attrib["version"]
 			else:
-				self.version = "n/a"
+				self.version = _("n/a")
 			return self.version
 		else:
-			self.version = "n/a"
+			self.version = _("n/a")
 		return self.version
 
 	def getTotalCards(self, reader):
@@ -309,7 +309,7 @@ class NcamInfo:
 							if spec in proto:
 								name = cl.attrib["name"]
 								cards = self.getTotalCards(name)
-								readers.append( ( "%s ( %s Cards )" % (name, cards), name) )
+								readers.append( ( _("%s ( %s Cards )") % (name, cards), name) )
 						else:
 							if cl.attrib["name"] != "" and cl.attrib["name"] != "" and cl.attrib["protocol"] != "":
 								readers.append( (cl.attrib["name"], cl.attrib["name"]) )  # return tuple for later use in Choicebox
@@ -338,19 +338,19 @@ class NcamInfo:
 			data = open(ecminfo, "r").readlines()
 			for i in data:
 				if "caid" in i:
-					result.append( ("CAID", i.split(":")[1].strip()) )
+					result.append( (_("CAID"), i.split(":")[1].strip()) )
 				elif "pid" in i:
-					result.append( ("PID", i.split(":")[1].strip()) )
+					result.append( (_("PID"), i.split(":")[1].strip()) )
 				elif "prov" in i:
 					result.append( (_("Provider"), i.split(":")[1].strip()) )
 				elif "reader" in i:
-					result.append( ("Reader", i.split(":")[1].strip()) )
+					result.append( (_("Reader"), i.split(":")[1].strip()) )
 				elif "from" in i:
 					result.append( (_("Address"), i.split(":")[1].strip()) )
 				elif "protocol" in i:
 					result.append( (_("Protocol"), i.split(":")[1].strip()) )
 				elif "hops" in i:
-					result.append( ("Hops", i.split(":")[1].strip()) )
+					result.append( (_("Hops"), i.split(":")[1].strip()) )
 				elif "ecm time" in i:
 					result.append( (_("ECM Time"), i.split(":")[1].strip()) )
 			return result
@@ -483,7 +483,7 @@ class NcamInfoMenu(Screen):
 			nc = NcamInfo()
 			reader = nc.getReaders()
 			if reader is not None:
-				reader.append( ("All", "all") )
+				reader.append( (_("All"), "all") )
 				if isinstance(reader, list):
 					if len(reader) == 1:
 						self.session.open(ncReaderStats, reader[0][1])
@@ -609,20 +609,20 @@ class ncInfo(Screen, NcamInfo):
 		self["key_red"] = StaticText(_("Close"))
 		if self.what == "c":
 			self["key_green"] = StaticText("")
-			self["key_yellow"] = StaticText("Servers")
-			self["key_blue"] = StaticText("Log")
+			self["key_yellow"] = StaticText(_("Servers"))
+			self["key_blue"] = StaticText(_("Log"))
 		elif self.what == "s":
-			self["key_green"] = StaticText("Clients")
+			self["key_green"] = StaticText(_("Clients"))
 			self["key_yellow"] = StaticText("")
-			self["key_blue"] = StaticText("Log")
+			self["key_blue"] = StaticText(_("Log"))
 		elif self.what == "l":
-			self["key_green"] = StaticText("Clients")
-			self["key_yellow"] = StaticText("Servers")
+			self["key_green"] = StaticText(_("Clients"))
+			self["key_yellow"] = StaticText(_("Servers"))
 			self["key_blue"] = StaticText("")
 		else:
-			self["key_green"] = StaticText("Clients")
-			self["key_yellow"] = StaticText("Servers")
-			self["key_blue"] = StaticText("Log")
+			self["key_green"] = StaticText(_("Clients"))
+			self["key_yellow"] = StaticText(_("Servers"))
+			self["key_blue"] = StaticText(_("Log"))
 		if config.ncaminfo.autoupdate.value:
 			self.loop = eTimer()
 			self.loop.callback.append(self.showData)
@@ -778,19 +778,19 @@ class ncInfo(Screen, NcamInfo):
 					if i != "":
 						self.out.append( self.buildLogListEntry( (i,) ))
 			if self.what == "c":
-				self.setTitle("Client Info ( Ncam-Version: %s )" % self.getVersion())
+				self.setTitle(_("Client Info ( Ncam-Version: %s )") % self.getVersion())
 				self["key_green"].setText("")
-				self["key_yellow"].setText("Servers")
-				self["key_blue"].setText("Log")
+				self["key_yellow"].setText(_("Servers"))
+				self["key_blue"].setText(_("Log"))
 			elif self.what == "s":
-				self.setTitle("Server Info ( Ncam-Version: %s )" % self.getVersion())
-				self["key_green"].setText("Clients")
+				self.setTitle(_("Server Info ( Ncam-Version: %s )") % self.getVersion())
+				self["key_green"].setText(_("Clients"))
 				self["key_yellow"].setText("")
-				self["key_blue"].setText("Log")
+				self["key_blue"].setText(_("Log"))
 			elif self.what == "l":
-				self.setTitle("Ncam Log ( Ncam-Version: %s )" % self.getVersion())
-				self["key_green"].setText("Clients")
-				self["key_yellow"].setText("Servers")
+				self.setTitle(_("Ncam Log ( Ncam-Version: %s )") % self.getVersion())
+				self["key_green"].setText(_("Clients"))
+				self["key_yellow"].setText(_("Servers"))
 				self["key_blue"].setText("")
 				self.itemheight = 20
 		else:
@@ -800,9 +800,9 @@ class ncInfo(Screen, NcamInfo):
 			for i in self.errmsg:
 				self.out.append( self.buildListEntry( (i,) ))
 			self.setTitle(_("Error") + ": " + data)
-			self["key_green"].setText("Clients")
-			self["key_yellow"].setText("Servers")
-			self["key_blue"].setText("Log")
+			self["key_green"].setText(_("Clients"))
+			self["key_yellow"].setText(_("Servers"))
+			self["key_blue"].setText(_("Log"))
 
 		if self.listchange:
 			self.listchange = False
@@ -892,7 +892,7 @@ class ncEntitlements(Screen, NcamInfo):
 		caids = data.keys()
 		caids.sort()
 		outlist = []
-		res = [ ("CAID", "System", "1", "2", "3", "4", "5", "Total", "Reshare", "") ]
+		res = [ ("CAID", "System", "1", "2", "3", "4", "5", "Total", _("Reshare"), "") ]
 		for i in caids:
 			csum = 0
 			ca_id = i
@@ -970,7 +970,7 @@ class ncEntitlements(Screen, NcamInfo):
 		else:
 			self["output"].setStyle("default")
 		self["output"].setList(result)
-		title = [ _("Reader"), self.cccamreader, _("Cards:"), cardTotal, "Server:", hostadr ]
+		title = [ _("Reader"), self.cccamreader, _("Cards:"), cardTotal, _("Server:"), hostadr ]
 		self.setTitle( " ".join(title))
 
 class ncReaderStats(Screen, NcamInfo):
@@ -1182,7 +1182,7 @@ class NcamInfoConfigScreen(Screen, ConfigListScreen):
 			self.ncamconfig.append(getConfigListEntry(_("Username (httpuser)"), config.ncaminfo.username))
 			self.ncamconfig.append(getConfigListEntry(_("Password (httpwd)"), config.ncaminfo.password))
 			self.ncamconfig.append(getConfigListEntry(_("IP address"), config.ncaminfo.ip))
-			self.ncamconfig.append(getConfigListEntry("Port", config.ncaminfo.port))
+			self.ncamconfig.append(getConfigListEntry(_("Port"), config.ncaminfo.port))
 		self.ncamconfig.append(getConfigListEntry(_("Automatically update Client/Server View?"), config.ncaminfo.autoupdate))
 		if config.ncaminfo.autoupdate.value:
 			self.ncamconfig.append(getConfigListEntry(_("Update interval (in seconds)"), config.ncaminfo.intervall))
