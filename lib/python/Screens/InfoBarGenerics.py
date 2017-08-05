@@ -421,28 +421,38 @@ class InfoBarShowHide(InfoBarScreenSaver):
         else:
             self.toggleShow()
 
+    #def toggleShow(self):
+    #    if self.__state == self.STATE_SHOWN and self.__stateNab == self.STATE_SHOWN:
+    #        self.hide()
+    #        self.hideTimer.stop()
+    #    elif self.__state == self.STATE_SHOWN and self.__stateNab == self.STATE_HIDDEN:
+    #        if self.InfoBar_NabDialog:
+    #            self.InfoBar_NabDialog.show()
+    #            self.__stateNab = self.STATE_SHOWN
+     #           self.instance.hide()
+     #       else:
+     #           self.hide()
+     #   elif self.__state == self.STATE_HIDDEN:
+     #       self.show()
+
     def toggleShow(self):
-        if self.__state == self.STATE_SHOWN and self.__stateNab == self.STATE_SHOWN:
-            self.hide()
-            self.hideTimer.stop()
-        elif self.__state == self.STATE_SHOWN and self.__stateNab == self.STATE_HIDDEN:
-            if self.InfoBar_NabDialog:
-                self.InfoBar_NabDialog.show()
-                self.__stateNab = self.STATE_SHOWN
-                self.instance.hide()
-            else:
-                self.hide()
-        elif self.__state == self.STATE_HIDDEN:
-            self.show()
+		if self.__state == self.STATE_HIDDEN:
+			self.showFirstInfoBar()
+		else:
+			self.showSecondInfoBar()
 
     def showSecondInfoBar(self):
         if isStandardInfoBar(self) and config.usage.show_second_infobar.value == 'EPG':
             if not (hasattr(self, 'hotkeyGlobal') and self.hotkeyGlobal('info') != 0):
                 self.showDefaultEPG()
         elif self.actualSecondInfoBarScreen and config.usage.show_second_infobar.value and not self.actualSecondInfoBarScreen.shown:
-            self.show()
-            self.actualSecondInfoBarScreen.show()
-            self.startHideTimer()
+            if self.InfoBar_NabDialog:
+                self.InfoBar_NabDialog.show()
+                self.__stateNab = self.STATE_SHOWN
+                self.instance.hide()
+                self.show()
+                self.actualSecondInfoBarScreen.show()
+                self.startHideTimer()
         else:
             self.hide()
             self.hideTimer.stop()
