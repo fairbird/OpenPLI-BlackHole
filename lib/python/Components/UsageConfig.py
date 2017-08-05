@@ -57,7 +57,7 @@ def InitUsageConfig():
     config.usage.quickzap_bouquet_change = ConfigYesNo(default=False)
     config.usage.e1like_radio_mode = ConfigYesNo(default=True)
     choicelist = [('0', _('No timeout'))]
-    for i in range(1, 12):
+    for i in range(1, 20):
         choicelist.append((str(i), ngettext('%d second', '%d seconds', i) % i))
 
     config.usage.infobar_timeout = ConfigSelection(default='5', choices=choicelist)
