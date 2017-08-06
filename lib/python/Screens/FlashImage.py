@@ -10,8 +10,11 @@ from Components.ProgressBar import ProgressBar
 from Tools.BoundFunction import boundFunction
 from Tools.Downloader import downloadWithProgress
 from Tools.HardwareInfo import HardwareInfo
-import os, urllib2, json, time
+import os, urllib2, json, time, zipfile
 from enigma import eTimer, eEPGCache, eConsoleAppContainer
+
+def checkimagefiles(files):
+	return len([x for x in files if 'kernel' in x and '.bin' in x or x in ('uImage', 'rootfs.bin', 'root_cfe_auto.bin', 'root_cfe_auto.jffs2', 'oe_rootfs.bin', 'e2jffs2.img', 'rootfs.tar.bz2')]) == 2
 
 class SelectImage(Screen):
 	def __init__(self, session, *args):
@@ -48,21 +51,30 @@ class SelectImage(Screen):
 
 	def getImagesList(self, reply=None):
 		list = []
-		try:
-			self.imagesList = self.imagesList or json.load(urllib2.urlopen('https://openpli.org/download/json/%s' % HardwareInfo().get_device_model()))
-			for catagorie in reversed(sorted(self.imagesList.keys())):
-				if catagorie in self.expanded:
-					list.append(ChoiceEntryComponent('expanded',((str(catagorie)), "Expander")))
-					for image in reversed(sorted(self.imagesList[catagorie].keys())):
-						list.append(ChoiceEntryComponent('verticalline',((str(self.imagesList[catagorie][image]['name'])), str(self.imagesList[catagorie][image]['link']))))
-				else:
-					list.append(ChoiceEntryComponent('expandable',((str(catagorie)), "Expander")))
-			if list:
-				self["list"].setList(list)
+		model = HardwareInfo().get_device_model()
+		if not self.imagesList:
+			try:
+				self.imagesList = json.load(urllib2.urlopen('https://openpli.org/download/json/%s' % model))
+			except:
+				self.imagesList = {}
+			for path, dirs, files in [x for x in os.walk('/media') if x[0].count(os.sep) <= 3]:
+				for file in ['/'.join([path, x]) for x in files if x.endswith('.zip') and model in x]:
+					if checkimagefiles([x.split(os.sep)[-1] for x in zipfile.ZipFile(file).namelist()]):
+						medium = path.split(os.sep)[-1]
+						if medium not in self.imagesList:
+							self.imagesList[medium] = {}
+						self.imagesList[medium][file] = { 'link': file, 'name': file.split(os.sep)[-1]}
+		for catagorie in reversed(sorted(self.imagesList.keys())):
+			if catagorie in self.expanded:
+				list.append(ChoiceEntryComponent('expanded',((str(catagorie)), "Expander")))
+				for image in reversed(sorted(self.imagesList[catagorie].keys())):
+					list.append(ChoiceEntryComponent('verticalline',((str(self.imagesList[catagorie][image]['name'])), str(self.imagesList[catagorie][image]['link']))))
 			else:
-				self.session.openWithCallback(self.close, MessageBox, _("Cannot find images - please try later"), type=MessageBox.TYPE_ERROR, timeout=3)
-		except:
-			self.session.openWithCallback(self.close, MessageBox, _("Cannot create image list - please try later"), type=MessageBox.TYPE_ERROR, timeout=3)
+				list.append(ChoiceEntryComponent('expandable',((str(catagorie)), "Expander")))
+		if list:
+			self["list"].setList(list)
+		else:
+			self.session.openWithCallback(self.close, MessageBox, _("Cannot find images - please try later"), type=MessageBox.TYPE_ERROR, timeout=3)
 
 	def keyOk(self):
 		currentSelected = self["list"].l.getCurrentSelection()
@@ -146,9 +158,9 @@ class FlashImage(Screen):
 
 			if self.destination:
 
-				destination = "/".join([self.destination, 'downloaded_image'])
-				self.zippedimage = "://" in self.source and "/".join([destination, 'zippedimage']) or self.source
-				self.unzippedimage = "/".join([destination, 'unzippedimage'])
+				destination = "/".join([self.destination, 'downloaded_images'])
+				self.zippedimage = "://" in self.source and "/".join([destination, self.imagename]) or self.source
+				self.unzippedimage = "/".join([destination, '%s.unzipped' % self.imagename[:-4]])
 			
 				if os.path.isfile(destination):
 					os.remove(destination)
@@ -164,7 +176,7 @@ class FlashImage(Screen):
 					self.container.appClosed.append(self.backupsettingsDone)
 					try:
 						if self.container.execute("%s%s'%s' %s" % (BACKUP_SCRIPT, config.plugins.autobackup.autoinstall.value and " -a " or " ", self.destination, int(config.plugins.autobackup.prevbackup.value))):
-							raise Exception, "failed to execute: %s" % cmd
+							raise Exception, "failed to execute backup script"
 					except Exception, e:
 						self.backupsettingsDone(e)
 				else:
@@ -210,10 +222,7 @@ class FlashImage(Screen):
 		
 	def unzip(self):
 		try:
-			if self.imagename.endswith(".zip"):
-				import zipfile
-				zipfile.ZipFile(self.zippedimage, 'r').extractall(self.unzippedimage)
-				os.remove(self.zippedimage)
+			zipfile.ZipFile(self.zippedimage, 'r').extractall(self.unzippedimage)
 			self.flashimage()	
 		except:
 			self.session.openWithCallback(self.abort, MessageBox, _("Error during unzipping image\n%s\n%s") % (self.imagename, reason), type=MessageBox.TYPE_ERROR, simple=True)
@@ -222,12 +231,26 @@ class FlashImage(Screen):
 		def findimagefiles(path):
 			for path, subdirs, files in os.walk(path):
 				if not subdirs and files:
-					return len([x for x in files if 'kernel' in x and '.bin' in x or x in ('uImage', 'rootfs.bin', 'root_cfe_auto.bin', 'root_cfe_auto.jffs2', 'oe_rootfs.bin', 'e2jffs2.img', 'rootfs.tar.bz2')]) == 2 and path
+					return checkimagefiles(files) and path
 		imagefiles = findimagefiles(self.unzippedimage)
 		if imagefiles:
-			Console().ePopen("/usr/bin/ofgwrite '%s'" % imagefiles)
+				self.container = eConsoleAppContainer()
+				self.container.appClosed.append(self.FlashimageDone)
+				try:
+					if self.container.execute("/usr/bin/ofgwrite '%s'" % imagefiles):
+						raise Exception, "failed to execute ofgwrite"
+				except Exception, e:
+					self.FlashimageDone(e)
 		else:
 			self.session.openWithCallback(self.abort, MessageBox, _("Image to install is invalid\n%s") % self.imagename, type=MessageBox.TYPE_ERROR, simple=True)
+
+	def FlashimageDone(self, retval):
+		if retval == 0:
+				self["header"].setText(_("Flashing image completed"))
+				self["info"].setText(_("Press exit to continue"))
+				self["progress"].hide()
+		else:
+			self.session.openWithCallback(self.abort, MessageBox, _("Flashing image was not succesfull\n%s") % self.imagename, type=MessageBox.TYPE_ERROR, simple=True)
 
 	def abort(self, reply=None):
 		if self.downloader:
