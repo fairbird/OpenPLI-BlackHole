@@ -1130,6 +1130,7 @@ class BhSpeedUp(Screen, ConfigListScreen):
          ['UIPositionSetup', 'enigma2-plugin-systemplugins-uipositionsetup'],
          ['WirelessAccessPoint', 'enigma2-plugin-systemplugins-wirelessaccesspoint'],
          ['DVDPlayer', 'enigma2-plugin-extensions-dvdplayer'],
+         ['HBBTV', 'enigma2-plugin-extensions-hbbtv']],
          ['OpenOpera Browser', 'enigma2-plugin-extensions-openopera']]
         machine = nab_Detect_Machine()
         self.activityTimer = eTimer()
