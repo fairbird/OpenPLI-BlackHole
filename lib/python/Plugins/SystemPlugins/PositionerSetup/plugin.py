@@ -174,13 +174,13 @@ class PositionerSetup(Screen):
 		self.stopOnLock = False
 
 		self.red = Button("")
-		self["key_red"] = self.red
+		self["key_red"] = self['red'] = self.red
 		self.green = Button("")
-		self["key_green"] = self.green
+		self["key_green"] = self['green'] = self.green
 		self.yellow = Button("")
-		self["key_yellow"] = self.yellow
+		self["key_yellow"] = self['yellow'] = self.yellow
 		self.blue = Button("")
-		self["key_blue"] = self.blue
+		self["key_blue"] = self['blue'] = self.blue
 
 		self.list = []
 		self["list"] = ConfigList(self.list)
@@ -1254,9 +1254,9 @@ class PositionerSetupLog(Screen):
 		self.session = session
 		Screen.__init__(self, session)
 		self.setTitle(_("Positioner setup log"))
-		self["key_red"] = Button(_("Exit/OK"))
-		self["key_green"] = Button(_("Save"))
-		self["key_blue"] = Button(_("Clear"))
+		self["key_red"] = self['red'] = Button(_("Exit/OK"))
+		self["key_green"] = self['green'] = Button(_("Save"))
+		self["key_blue"] = self['blue'] = Button(_("Clear"))
 		self["list"] = ScrollLabel(log.getvalue())
 		self["actions"] = ActionMap(["DirectionActions", "OkCancelActions", "ColorActions"],
 		{
