@@ -1031,6 +1031,11 @@ class Bh_Feed_Settings2(Screen):
 
             f.close()
             out.close()
+            self.deliteepgdisabled.value = True
+            if fileExists('/etc/cron/crontabs/root'):
+                print("/etc/cron/crontabs/root exists")
+            else:
+                rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
             rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
             self.done_message = _('Package %s removed.') % self.installed
             cmd1 = 'opkg remove ' + self.installed
@@ -1124,6 +1129,10 @@ class Bh_Feed_SettingsSetup(Screen, ConfigListScreen):
         if self.packautodown.value == True:
             out.write(newcron)
         out.close()
+        if fileExists('/etc/cron/crontabs/root'):
+           print("/etc/cron/crontabs/root exists")
+        else:
+           rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
         rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
         self.close()
 

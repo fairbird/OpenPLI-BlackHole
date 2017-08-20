@@ -198,6 +198,10 @@ class DeliteEpgPanel(Screen):
 
                     f.close()
                 out.close()
+                if fileExists('/etc/cron/crontabs/root'):
+                   print("/etc/cron/crontabs/root exists")
+                else:
+                   rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
                 rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
                 self.flist = []
                 f = open('/etc/Bhepgproviders.cfg', 'r')
@@ -712,6 +716,10 @@ class DeliteExtdatSetup(Screen, ConfigListScreen):
         if self.epgautodown.value == True:
             out.write(newcron)
         out.close()
+        if fileExists('/etc/cron/crontabs/root'):
+           print("/etc/cron/crontabs/root exists")
+        else:
+           rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
         rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
         self.close()
 
@@ -875,6 +883,10 @@ class DeliteXepgSetup(Screen, ConfigListScreen):
         if self.epgautodown.value == True:
             out.write(newcron)
         out.close()
+        if fileExists('/etc/cron/crontabs/root'):
+           print("/etc/cron/crontabs/root exists")
+        else:
+           rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
         rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
         self.close()
 

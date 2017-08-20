@@ -434,6 +434,10 @@ class DeliteCronMang(Screen):
 
             f.close()
             out.close()
+            if fileExists('/etc/cron/crontabs/root'):
+               print("/etc/cron/crontabs/root exists")
+            else:
+               rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
             rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
             self.updateList()
 
@@ -531,6 +535,10 @@ class DeliteSetupCronConf(Screen, ConfigListScreen):
             f.close()
         out.write(newcron)
         out.close()
+        if fileExists('/etc/cron/crontabs/root'):
+           print("/etc/cron/crontabs/root exists")
+        else:
+           rc = system('ln -sfn /etc/bhcron/root /etc/cron/crontabs/root')
         rc = system('crontab /etc/bhcron/bh.cron -c /etc/bhcron/')
         self.close()
 
