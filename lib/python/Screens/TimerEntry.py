@@ -61,6 +61,7 @@ class TimerEntry(Screen, ConfigListScreen):
 		zap_wakeup = self.timer.zap_wakeup
 		rename_repeat = self.timer.rename_repeat
 		conflict_detection = self.timer.conflict_detection
+		config.movielist.videodirs.load()
 
 		afterevent = {
 			AFTEREVENT.NONE: "nothing",
