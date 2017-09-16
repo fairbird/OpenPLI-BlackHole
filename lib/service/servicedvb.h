@@ -99,7 +99,6 @@ public:
 	RESULT connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
 	RESULT start();
 	RESULT stop();
-	RESULT setTarget(int target);
 	RESULT setTarget(int target, bool noaudio);
 
 	RESULT seek(ePtr<iSeekableService> &ptr);
