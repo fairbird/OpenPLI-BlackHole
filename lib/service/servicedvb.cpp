@@ -1044,7 +1044,8 @@ eDVBServicePlay::eDVBServicePlay(const eServiceReference &ref, eDVBService *serv
 	m_cutlist_enabled(1),
 	m_subtitle_widget(0),
 	m_subtitle_sync_timer(eTimer::create(eApp)),
-	m_nownext_timer(eTimer::create(eApp))
+	m_nownext_timer(eTimer::create(eApp)),
+	m_qpip_mode(false)
 {
 	CONNECT(m_service_handler.serviceEvent, eDVBServicePlay::serviceEvent);
 	CONNECT(m_service_handler_timeshift.serviceEvent, eDVBServicePlay::serviceEventTimeshift);
@@ -2166,18 +2167,24 @@ int eDVBServicePlay::selectAudioStream(int i)
 	}
 
 	if (i != -1 && apid != m_current_audio_pid && (m_is_pvr || m_timeshift_active))
-		eDebug("[eDVBServicePlay] getPlayPosition ret %d, pos %lld in selectAudioStream", getPlayPosition(position), position);
+	{
+		ret = getPlayPosition(position);
+		eDebug("[eDVBServicePlay] getPlayPosition ret %d, pos %lld in selectAudioStream", ret, position);
+	}
 
 	m_current_audio_pid = apid;
 
-	if (m_decoder->setAudioPID(apid, apidtype))
+	if ((!m_qpip_mode || !m_noaudio) && m_decoder->setAudioPID(apid, apidtype))
 	{
 		eDebug("[eDVBServicePlay] set audio pid %04x failed", apid);
 		return -4;
 	}
 
 	if (position != -1)
-		eDebug("[eDVBServicePlay] seekTo ret %d", seekTo(position));
+	{
+		ret = seekTo(position);
+		eDebug("[eDVBServicePlay] seekTo ret %d", ret);
+	}
 
 	int rdsPid = apid;
 
@@ -2877,7 +2884,7 @@ void eDVBServicePlay::updateDecoder(bool sendSeekableStateChanged)
 	if (m_decoder)
 	{
 		bool wasSeekable = m_decoder->getVideoProgressive() != -1;
-		if (!m_noaudio)
+		if (!m_noaudio && !m_qpip_mode)
 		{
 			if (m_dvb_service)
  			{
@@ -3547,6 +3554,22 @@ ePtr<iStreamData> eDVBServicePlay::getStreamingData()
 		retval = new eDVBServicePMTHandler::eStreamData(program);
 	}
 	return retval;
+}
+
+void eDVBServicePlay::setQpipMode(bool value, bool audio)
+{
+	m_qpip_mode = value;
+	m_noaudio = !audio;
+
+	if(m_decoder)
+	{
+		if (!m_noaudio)
+			selectAudioStream();
+		else
+			m_decoder->setAudioPID(-1, -1);
+
+		m_decoder->set();
+	}
 }
 
 DEFINE_REF(eDVBServicePlay)
