@@ -1188,7 +1188,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 			signalquality = (ret >= ter_max ? 65536 : ret * 65536 / ter_max);
 			break;
 		case feATSC: // we assume a max of 42db here
-			signalquality = (ret >= atsc_max ? 65536 : ret * 65536 / atsc_max);
+			signalquality = (ret >= atsc_max ? 65535 : ret * 65535 / atsc_max);
 			break;
 		}
 	}
