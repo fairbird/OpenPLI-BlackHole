@@ -49,19 +49,22 @@ class About(Screen):
         AboutText += _('CPU: ') + about.getCPUInfoString() + '\n'
         # [WanWizard] Removed until we find a reliable way to determine the installation date
 	# AboutText += _("Installed: ") + about.getFlashDateString() + "\n"
-        AboutText += _('Kernel version: ') + about.getKernelVersionString() + '\n'
 
-        self["EnigmaVersion"] = StaticText("Enigma: " + about.getEnigmaVersionString())
-        self["ImageVersion"] = StaticText("Firmware: " + bhVer + " " + bhRev)
-        AboutText += _('Enigma (re)starts: %d\n') % config.misc.startCounter.value
+        EnigmaVersion = "Enigma version: " + about.getEnigmaVersionString()
+	self["EnigmaVersion"] = StaticText(EnigmaVersion)
+	AboutText += "\n" + EnigmaVersion + "\n"
 
-        GStreamerVersion = 'GStreamer: ' + about.getGStreamerVersionString().replace('GStreamer', '')
-        self['GStreamerVersion'] = StaticText(GStreamerVersion)
-        AboutText += GStreamerVersion + '\n'
+	AboutText += _("Kernel version: ") + about.getKernelVersionString() + "\n"
 
-        AboutText += _('DVB drivers: ') + about.getDriverInstalledDate() + '\n'
+	AboutText += _("DVB driver version: ") + about.getDriverInstalledDate() + "\n"
+
+	GStreamerVersion = "GStreamer version: " + about.getGStreamerVersionString().replace("GStreamer","")
+	self["GStreamerVersion"] = StaticText(GStreamerVersion)
+	AboutText += GStreamerVersion + "\n"
 
         AboutText += _("Python version: ") + about.getPythonVersionString() + "\n"
+
+	AboutText += _("Enigma (re)starts: %d\n") % config.misc.startCounter.value
 
         fp_version = getFPVersion()
         if fp_version is None:
