@@ -123,6 +123,8 @@ class EventName(Converter, object):
 			description = event.getShortDescription()
 			extended = event.getExtendedDescription()
 			if description and extended:
+				if description.replace('\n','') == extended.replace('\n',''):
+					return extended
 				description += '\n'
 			return description + extended
                 elif self.type == self.NEXT_NAME or self.type == self.NEXT_DESCRIPTION:
