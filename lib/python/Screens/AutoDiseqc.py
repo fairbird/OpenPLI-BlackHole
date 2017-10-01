@@ -100,7 +100,26 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			318,
 			"Hotbird 13.0e"),
 
-		# thor  3592 CT24
+		# eutelsat 160 hrt
+ 		(
+ 			10721,
+ 			27500,
+ 			eDVBFrontendParametersSatellite.Polarisation_Horizontal,
+ 			eDVBFrontendParametersSatellite.FEC_3_4,
+ 			eDVBFrontendParametersSatellite.Inversion_Off,
+ 			160,
+ 			eDVBFrontendParametersSatellite.System_DVB_S,
+ 			eDVBFrontendParametersSatellite.Modulation_Auto,
+ 			eDVBFrontendParametersSatellite.RollOff_auto,
+ 			eDVBFrontendParametersSatellite.Pilot_Unknown,		
+ 			-1,
+ 			0,
+ 			1,
+ 			20100,
+ 			366,
+ 			"Eutelsat 16A 16.0e"),
+ 
+  		# thor  3592 CT24
 		(
 			12072,
 			28000,
