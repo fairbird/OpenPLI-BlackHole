@@ -533,138 +533,140 @@ def loadSingleSkinData(desktop, skin, path_prefix):
                                 raise SkinError("need color and name, got %s %s" % (name, color))
 
         for c in skin.findall("fonts"):
-         for font in c.findall('font'):
-            get_attr = font.attrib.get
-            filename = get_attr('filename', '<NONAME>')
-            name = get_attr('name', 'Regular')
-            scale = get_attr('scale')
-            if scale:
-                scale = int(scale)
-            else:
-                scale = 100
-            is_replacement = get_attr('replacement') and True or False
-            render = get_attr('render')
-            if render:
-                render = int(render)
-            else:
-                render = 0
-            resolved_font = resolveFilename(SCOPE_FONTS, filename, path_prefix=path_prefix)
-            if not fileExists(resolved_font):
-                skin_path = resolveFilename(SCOPE_CURRENT_SKIN, filename)
-                if fileExists(skin_path):
-                    resolved_font = skin_path
-            addFont(resolved_font, name, scale, is_replacement, render)
+                for font in c.findall("font"):
+                        get_attr = font.attrib.get
+                        filename = get_attr("filename", "<NONAME>")
+                        name = get_attr("name", "Regular")
+                        scale = get_attr("scale")
+                        if scale:
+                                scale = int(scale)
+                        else:
+                                scale = 100
+                        is_replacement = get_attr("replacement") and True or False
+                        render = get_attr("render")
+                        if render:
+                                render = int(render)
+                        else:
+                                render = 0
+                        resolved_font = resolveFilename(SCOPE_FONTS, filename, path_prefix=path_prefix)
+                        if not fileExists(resolved_font): #when font is not available look at current skin path
+                                skin_path = resolveFilename(SCOPE_CURRENT_SKIN, filename)
+                                if fileExists(skin_path):
+                                        resolved_font = skin_path
+                        addFont(resolved_font, name, scale, is_replacement, render)
+                        #print "Font: ", resolved_font, name, scale, is_replacement
+                for alias in c.findall("alias"):
+                        get = alias.attrib.get
+                        try:
+                                name = get("name")
+                                font = get("font")
+                                size = int(get("size"))
+                                height = int(get("height", size)) # to be calculated some day
+                                width = int(get("width", size))
+                                global fonts
+                                fonts[name] = (font, size, height, width)
+                        except Exception, ex:
+                                print "[SKIN] bad font alias", ex
 
-        for alias in c.findall('alias'):
-            get = alias.attrib.get
-            try:
-                name = get('name')
-                font = get('font')
-                size = int(get('size'))
-                height = int(get('height', size))
-                width = int(get('width', size))
-                fonts[name] = (font,
-                 size,
-                 height,
-                 width)
-            except Exception as ex:
-                print '[SKIN] bad font alias', ex
+        for c in skin.findall("parameters"):
+                for parameter in c.findall("parameter"):
+                        get = parameter.attrib.get
+                        try:
+                                name = get("name")
+                                value = get("value")
+                                parameters[name] = "," in value and map(int, value.split(",")) or int(value)
+                        except Exception, ex:
+                                print "[SKIN] bad parameter", ex
 
-        for c in skin.findall('parameters'):
-         for parameter in c.findall('parameter'):
-            get = parameter.attrib.get
-            try:
-                name = get('name')
-                value = get('value')
-                parameters[name] = "," in value and map(int, value.split(",")) or int(value)
-            except Exception as ex:
-                print '[SKIN] bad parameter', ex
+        for c in skin.findall("subtitles"):
+                from enigma import eSubtitleWidget
+                scale = ((1,1),(1,1))
+                for substyle in c.findall("sub"):
+                        get_attr = substyle.attrib.get
+                        font = parseFont(get_attr("font"), scale)
+                        col = get_attr("foregroundColor")
+                        if col:
+                                foregroundColor = parseColor(col)
+                                haveColor = 1
+                        else:
+                                foregroundColor = gRGB(0xFFFFFF)
+                                haveColor = 0
+                        col = get_attr("borderColor")
+                        if col:
+                                borderColor = parseColor(col)
+                        else:
+                                borderColor = gRGB(0)
+                        borderwidth = get_attr("borderWidth")
+                        if borderwidth is None:
+                                # default: use a subtitle border
+                                borderWidth = 3
+                        else:
+                                borderWidth = int(borderwidth)
+                        face = eSubtitleWidget.__dict__[get_attr("name")]
+                        eSubtitleWidget.setFontStyle(face, font, haveColor, foregroundColor, borderColor, borderWidth)
 
-        for c in skin.findall('subtitles'):
-         from enigma import eSubtitleWidget
-         scale = ((1, 1), (1, 1))
-         for substyle in c.findall('sub'):
-            get_attr = substyle.attrib.get
-            font = parseFont(get_attr('font'), scale)
-            col = get_attr('foregroundColor')
-            if col:
-                foregroundColor = parseColor(col)
-                haveColor = 1
-            else:
-                foregroundColor = gRGB(16777215)
-                haveColor = 0
-            col = get_attr('borderColor')
-            if col:
-                borderColor = parseColor(col)
-            else:
-                borderColor = gRGB(0)
-            borderwidth = get_attr('borderWidth')
-            if borderwidth is None:
-                borderWidth = 3
-            else:
-                borderWidth = int(borderwidth)
-            face = eSubtitleWidget.__dict__[get_attr('name')]
-            eSubtitleWidget.setFontStyle(face, font, haveColor, foregroundColor, borderColor, borderWidth)
+        for windowstyle in skin.findall("windowstyle"):
+                style = eWindowStyleSkinned()
+                style_id = windowstyle.attrib.get("id")
+                if style_id:
+                        style_id = int(style_id)
+                else:
+                        style_id = 0
+                # defaults
+                font = gFont("Regular", 20)
+                offset = eSize(20, 5)
+                for title in windowstyle.findall("title"):
+                        get_attr = title.attrib.get
+                        offset = parseSize(get_attr("offset"), ((1,1),(1,1)))
+                        font = parseFont(get_attr("font"), ((1,1),(1,1)))
 
-        for windowstyle in skin.findall('windowstyle'):
-         style = eWindowStyleSkinned()
-         style_id = windowstyle.attrib.get('id')
-         if style_id:
-            style_id = int(style_id)
-         else:
-            style_id = 0
-         font = gFont('Regular', 20)
-         offset = eSize(20, 5)
-         for title in windowstyle.findall('title'):
-            get_attr = title.attrib.get
-            offset = parseSize(get_attr('offset'), ((1, 1), (1, 1)))
-            font = parseFont(get_attr('font'), ((1, 1), (1, 1)))
-
-         style.setTitleFont(font)
-         style.setTitleOffset(offset)
-         for borderset in windowstyle.findall('borderset'):
-            bsName = str(borderset.attrib.get('name'))
-            for pixmap in borderset.findall('pixmap'):
-                get_attr = pixmap.attrib.get
-                bpName = get_attr('pos')
-                filename = get_attr('filename')
-                if filename and bpName:
-                    png = loadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, filename, path_prefix=path_prefix), desktop)
-                    style.setPixmap(eWindowStyleSkinned.__dict__[bsName], eWindowStyleSkinned.__dict__[bpName], png)
-
-         for color in windowstyle.findall('color'):
-            get_attr = color.attrib.get
-            colorType = get_attr('name')
-            color = parseColor(get_attr('color'))
-            try:
-                style.setColor(eWindowStyleSkinned.__dict__['col' + colorType], color)
-            except:
-                raise SkinError("Unknown color %s" % colorType)
-
-         x = eWindowStyleManager.getInstance()
-         x.setStyle(style_id, style)
-
-        for margin in skin.findall('margin'):
-         style_id = margin.attrib.get('id')
-         if style_id:
-            style_id = int(style_id)
-         else:
-            style_id = 0
-         r = eRect(0, 0, 0, 0)
-         v = margin.attrib.get('left')
-         if v:
-            r.setLeft(int(v))
-         v = margin.attrib.get('top')
-         if v:
-            r.setTop(int(v))
-         v = margin.attrib.get('right')
-         if v:
-            r.setRight(int(v))
-         v = margin.attrib.get('bottom')
-         if v:
-            r.setBottom(int(v))
-         getDesktop(style_id).setMargins(r)
-
+                style.setTitleFont(font);
+                style.setTitleOffset(offset)
+                #print "  ", font, offset
+                for borderset in windowstyle.findall("borderset"):
+                        bsName = str(borderset.attrib.get("name"))
+                        for pixmap in borderset.findall("pixmap"):
+                                get_attr = pixmap.attrib.get
+                                bpName = get_attr("pos")
+                                filename = get_attr("filename")
+                                if filename and bpName:
+                                        png = loadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, filename, path_prefix=path_prefix), desktop)
+                                        style.setPixmap(eWindowStyleSkinned.__dict__[bsName], eWindowStyleSkinned.__dict__[bpName], png)
+                                #print "  borderset:", bpName, filename
+                for color in windowstyle.findall("color"):
+                        get_attr = color.attrib.get
+                        colorType = get_attr("name")
+                        color = parseColor(get_attr("color"))
+                        try:
+                                style.setColor(eWindowStyleSkinned.__dict__["col" + colorType], color)
+                        except:
+                                raise SkinError("Unknown color %s" % colorType)
+                                #pass
+                        #print "  color:", type, color
+                x = eWindowStyleManager.getInstance()
+                x.setStyle(style_id, style)
+        for margin in skin.findall("margin"):
+                style_id = margin.attrib.get("id")
+                if style_id:
+                        style_id = int(style_id)
+                else:
+                        style_id = 0
+                r = eRect(0,0,0,0)
+                v = margin.attrib.get("left")
+                if v:
+                        r.setLeft(int(v))
+                v = margin.attrib.get("top")
+                if v:
+                        r.setTop(int(v))
+                v = margin.attrib.get("right")
+                if v:
+                        r.setRight(int(v))
+                v = margin.attrib.get("bottom")
+                if v:
+                        r.setBottom(int(v))
+                # the "desktop" parameter is hardcoded to the UI screen, so we must ask
+                # for the one that this actually applies to.
+                getDesktop(style_id).setMargins(r)
 
 dom_screens = {}
 
