@@ -47,7 +47,6 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/service/iservice.h>
 #include <lib/service/service.h>
 #include <lib/service/servicedvb.h>
-#include <lib/service/servicepeer.h>
 #include <lib/gdi/fb.h>
 #include <lib/gdi/font.h>
 #include <lib/gdi/gpixmap.h>
@@ -161,7 +160,6 @@ typedef long time_t;
 %include <lib/service/event.h>
 %include <lib/service/iservice.h>
 %include <lib/service/service.h>
-%include <lib/service/servicepeer.h>
 
 // TODO: embed these...
 %immutable ePicLoad::PictureData;
