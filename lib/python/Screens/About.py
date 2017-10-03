@@ -50,7 +50,7 @@ class About(Screen):
         # [WanWizard] Removed until we find a reliable way to determine the installation date
 	# AboutText += _("Installed: ") + about.getFlashDateString() + "\n"
 
-        EnigmaVersion = "Enigma version: " + about.getEnigmaVersionString()
+        EnigmaVersion = _("Enigma version: ") + about.getEnigmaVersionString()
 	self["EnigmaVersion"] = StaticText(EnigmaVersion)
 	AboutText += "\n" + EnigmaVersion + "\n"
 
@@ -58,7 +58,7 @@ class About(Screen):
 
 	AboutText += _("DVB driver version: ") + about.getDriverInstalledDate() + "\n"
 
-	GStreamerVersion = "GStreamer version: " + about.getGStreamerVersionString().replace("GStreamer","")
+	GStreamerVersion = _("GStreamer version: ") + about.getGStreamerVersionString().replace("GStreamer","")
 	self["GStreamerVersion"] = StaticText(GStreamerVersion)
 	AboutText += GStreamerVersion + "\n"
 
