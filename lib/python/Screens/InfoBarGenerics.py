@@ -221,9 +221,9 @@ class InfoBarScreenSaver():
             eActionMap.getInstance().unbindAction('', self.keypressScreenSaver)
 
 class HideVBILine(Screen):
-	skin = """<screen position="0,0" size="%s,%s" backgroundColor="0" flags="wfNoBorder"/>""" % (getDesktop(0).size().width() * 2/3, getDesktop(0).size().height() / 360)
-	def __init__(self, session):
-		Screen.__init__(self, session)
+    skin = """<screen position="0,0" size="%s,%s" backgroundColor="0" flags="wfNoBorder"/>""" % (getDesktop(0).size().width() * 2/3, getDesktop(0).size().height() / 360)
+    def __init__(self, session):
+        Screen.__init__(self, session)
 
 class SecondInfoBar(Screen):
 
@@ -270,22 +270,22 @@ class InfoBarShowHide(InfoBarScreenSaver):
             self.secondInfoBarScreenSimple = self.session.instantiateDialog(SecondInfoBar, 'SecondInfoBarSimple')
             self.secondInfoBarScreenSimple.show()
             self.actualSecondInfoBarScreen = config.usage.show_simple_second_infobar.value and self.secondInfoBarScreenSimple.skinAttributes and self.secondInfoBarScreenSimple or self.secondInfoBarScreen
-	
-	self.hideVBILineScreen = self.session.instantiateDialog(HideVBILine)
-	self.hideVBILineScreen.show()
+    
+        self.hideVBILineScreen = self.session.instantiateDialog(HideVBILine)
+        self.hideVBILineScreen.show()
 
         self.onLayoutFinish.append(self.__layoutFinished)
-	self.onExecBegin.append(self.__onExecBegin)
+        self.onExecBegin.append(self.__onExecBegin)
 
     def __onExecBegin(self):
-	self.clearScreenPath()
-	self.showHideVBI()
+          self.clearScreenPath()
+          self.showHideVBI()
 
     def __layoutFinished(self):
         if self.actualSecondInfoBarScreen:
             self.secondInfoBarScreen.hide()
             self.secondInfoBarScreenSimple.hide()
-	self.hideVBILineScreen.hide()
+        self.hideVBILineScreen.hide()
 
     def __onShow(self):
         self.__state = self.STATE_SHOWN
@@ -300,18 +300,20 @@ class InfoBarShowHide(InfoBarScreenSaver):
 
     def __onHide(self):
         self.__state = self.STATE_HIDDEN
+        if self.actualSecondInfoBarScreen:
+           self.actualSecondInfoBarScreen.hide()
         if self.__stateNab == self.STATE_SHOWN:
-            self.InfoBar_NabDialog.hide()
-            self.__stateNab = self.STATE_HIDDEN
+           self.InfoBar_NabDialog.hide()
+           self.__stateNab = self.STATE_HIDDEN
         self.resetAlpha()
         for x in self.onShowHideNotifiers:
             x(False)
 
     def resetAlpha(self):
- 		if config.usage.show_infobar_do_dimming.value:
- 			self.unDimmingTimer = eTimer()
- 			self.unDimmingTimer.callback.append(self.unDimming)
- 			self.unDimmingTimer.start(300, True)
+        if config.usage.show_infobar_do_dimming.value:
+            self.unDimmingTimer = eTimer()
+            self.unDimmingTimer.callback.append(self.unDimming)
+            self.unDimmingTimer.start(300, True)
 
     def toggleShowLong(self):
         if not config.usage.ok_is_channelselection.value:
@@ -363,25 +365,25 @@ class InfoBarShowHide(InfoBarScreenSaver):
                 self.autocampop_active = 0
             if config.usage.show_infobar_on_zap.value:
                 self.doShow()
-	self.showHideVBI()
+            self.showHideVBI()
 
     def doDimming(self):
-	if config.usage.show_infobar_do_dimming.value:
-		self.dimmed = int(int(self.dimmed) - 1)
-	else:
- 		self.dimmed = 0
- 	self.DimmingTimer.stop()
- 	self.doHide()
+        if config.usage.show_infobar_do_dimming.value:
+           self.dimmed = int(int(self.dimmed) - 1)
+        else:
+           self.dimmed = 0
+        self.DimmingTimer.stop()
+        self.doHide()
  
     def unDimming(self):
- 	self.unDimmingTimer.stop()
- 	self.doWriteAlpha(config.av.osd_alpha.value)
+        self.unDimmingTimer.stop()
+        self.doWriteAlpha(config.av.osd_alpha.value)
  
     def doWriteAlpha(self, value):
- 	if fileExists("/proc/stb/video/alpha"):
- 		f=open("/proc/stb/video/alpha","w")
- 		f.write("%i" % (value))
- 		f.close()
+        if fileExists("/proc/stb/video/alpha"):
+           f=open("/proc/stb/video/alpha","w")
+           f.write("%i" % (value))
+           f.close()
 
     def startHideTimer(self):
         if self.__state == self.STATE_SHOWN and not self.__locked:
@@ -416,7 +418,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
     def okButtonCheck(self):
         if config.usage.ok_is_channelselection.value and hasattr(self, 'openServiceList'):
             if isinstance(self, InfoBarTimeshift) and self.timeshiftEnabled() and isinstance(self, InfoBarSeek) and self.seekstate == self.SEEK_STATE_PAUSE:
-		     return
+             return
             self.openServiceList()
         else:
             self.toggleShow()
@@ -429,17 +431,17 @@ class InfoBarShowHide(InfoBarScreenSaver):
     #        if self.InfoBar_NabDialog:
     #            self.InfoBar_NabDialog.show()
     #            self.__stateNab = self.STATE_SHOWN
-     #           self.instance.hide()
-     #       else:
-     #           self.hide()
-     #   elif self.__state == self.STATE_HIDDEN:
-     #       self.show()
+    #           self.instance.hide()
+    #       else:
+    #           self.hide()
+    #   elif self.__state == self.STATE_HIDDEN:
+    #       self.show()
 
     def toggleShow(self):
-		if self.__state == self.STATE_HIDDEN:
-			self.showFirstInfoBar()
-		else:
-			self.showSecondInfoBar()
+        if self.__state == self.STATE_HIDDEN:
+            self.showFirstInfoBar()
+        else:
+            self.showSecondInfoBar()
 
     def showSecondInfoBar(self):
         if isStandardInfoBar(self) and config.usage.show_second_infobar.value == 'EPG':
@@ -503,35 +505,35 @@ class InfoBarShowHide(InfoBarScreenSaver):
             self.autocampop_active = 1
 
     def checkHideVBI(self):
-			service = self.session.nav.getCurrentlyPlayingServiceReference()
-			servicepath = service and service.getPath()
-			if servicepath and servicepath.startswith("/"):
-				if service.toString().startswith("1:"):
-					info = eServiceCenter.getInstance().info(service)
-					service = info and info.getInfoString(service, iServiceInformation.sServiceref)
-					return service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & self.FLAG_HIDE_VBI and True
-				else:
-					return ".hidvbi." in servicepath.lower()
-			service = self.session.nav.getCurrentService()
-			info = service and service.info()
-			return info and info.getInfo(iServiceInformation.sHideVBI)
+            service = self.session.nav.getCurrentlyPlayingServiceReference()
+            servicepath = service and service.getPath()
+            if servicepath and servicepath.startswith("/"):
+                if service.toString().startswith("1:"):
+                    info = eServiceCenter.getInstance().info(service)
+                    service = info and info.getInfoString(service, iServiceInformation.sServiceref)
+                    return service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & self.FLAG_HIDE_VBI and True
+                else:
+                    return ".hidvbi." in servicepath.lower()
+            service = self.session.nav.getCurrentService()
+            info = service and service.info()
+            return info and info.getInfo(iServiceInformation.sHideVBI)
 
     def showHideVBI(self):
-		if self.checkHideVBI():
-			self.hideVBILineScreen.show()
-		else:
-			self.hideVBILineScreen.hide()
+        if self.checkHideVBI():
+            self.hideVBILineScreen.show()
+        else:
+            self.hideVBILineScreen.hide()
 
     def ToggleHideVBI(self):
-		service = self.session.nav.getCurrentlyPlayingServiceReference()
-		servicepath = service and service.getPath()
-		if not servicepath:
-			if eDVBDB.getInstance().getFlag(service) & self.FLAG_HIDE_VBI:
-				eDVBDB.getInstance().removeFlag(service, self.FLAG_HIDE_VBI)
-			else:
-				eDVBDB.getInstance().addFlag(service, self.FLAG_HIDE_VBI)
-			eDVBDB.getInstance().reloadBouquets()
-			self.showHideVBI()
+        service = self.session.nav.getCurrentlyPlayingServiceReference()
+        servicepath = service and service.getPath()
+        if not servicepath:
+            if eDVBDB.getInstance().getFlag(service) & self.FLAG_HIDE_VBI:
+                eDVBDB.getInstance().removeFlag(service, self.FLAG_HIDE_VBI)
+            else:
+                eDVBDB.getInstance().addFlag(service, self.FLAG_HIDE_VBI)
+            eDVBDB.getInstance().reloadBouquets()
+            self.showHideVBI()
 
 class BufferIndicator(Screen):
 
@@ -950,11 +952,11 @@ class InfoBarChannelSelection():
 class InfoBarMenu():
 
     def __init__(self):
-	self['MenuActions'] = HelpableActionMap(self, 'InfobarMenuActions',
-  			{
-  				'mainMenu': (self.mainMenu, _('Enter main menu...')),
-				'toggleAspectRatio': (self.toggleAspectRatio, _('Toggle aspect ratio...')),
-  			})
+        self['MenuActions'] = HelpableActionMap(self, 'InfobarMenuActions',
+            {
+                'mainMenu': (self.mainMenu, _('Enter main menu...')),
+                'toggleAspectRatio': (self.toggleAspectRatio, _('Toggle aspect ratio...')),
+            })
         self.session.infobar = None
 
     def mainMenu(self):
@@ -965,17 +967,17 @@ class InfoBarMenu():
 
     def mainMenuClosed(self, *val):
         self.session.infobar = None
-	
+    
     def toggleAspectRatio(self):
- 		ASPECT = [ "auto", "16:9", "4:3" ]
- 		ASPECT_MSG = { "auto":"Auto", "16:9":"16:9", "4:3":"4:3" }
- 		if config.av.aspect.value in ASPECT:
- 			index = ASPECT.index(config.av.aspect.value)
- 			config.av.aspect.value = ASPECT[(index+1)%3]
- 		else:
- 			config.av.aspect.value = "auto"
- 		config.av.aspect.save()
- 		self.session.open(MessageBox, _("AV aspect is %s." % ASPECT_MSG[config.av.aspect.value]), MessageBox.TYPE_INFO, timeout=5)
+        ASPECT = [ "auto", "16:9", "4:3" ]
+        ASPECT_MSG = { "auto":"Auto", "16:9":"16:9", "4:3":"4:3" }
+        if config.av.aspect.value in ASPECT:
+            index = ASPECT.index(config.av.aspect.value)
+            config.av.aspect.value = ASPECT[(index+1)%3]
+        else:
+            config.av.aspect.value = "auto"
+        config.av.aspect.save()
+        self.session.open(MessageBox, _("AV aspect is %s." % ASPECT_MSG[config.av.aspect.value]), MessageBox.TYPE_INFO, timeout=5)
 
 class InfoBarSimpleEventView():
 
@@ -1932,8 +1934,8 @@ class InfoBarTimeshift():
         begin_date = strftime('%Y%m%d %H%M', localtime(time()))
         filename = begin_date + ' - ' + service_name
         if config.recording.filename_composition.value == "event":
-	    filename = "%s - %s_%s" % (info["name"], strftime("%Y%m%d %H%M",localtime(time())), service_name)
-	elif config.recording.filename_composition.value == "short":
+            filename = "%s - %s_%s" % (info["name"], strftime("%Y%m%d %H%M",localtime(time())), service_name)
+        elif config.recording.filename_composition.value == "short":
             filename = strftime('%Y%m%d', localtime(time())) + ' - ' + info['name']
         elif config.recording.filename_composition.value == 'long':
             filename += ' - ' + info['name'] + ' - ' + info['description']
@@ -2602,20 +2604,20 @@ class InfoBarInstantRecord():
             dir = defaultMoviePath()
 
         if not fileExists("/hdd", 0):
-		print "not found /hdd"
-		system("ln -s /media/hdd /hdd")
+            print "not found /hdd"
+            system("ln -s /media/hdd /hdd")
 #
-	try:
-		stat = os_stat(dir)
-	except:
+        try:
+            stat = os_stat(dir)
+        except:
             self.session.open(MessageBox, _('Missing ') + '\n' + dir + '\n' + _('No HDD found or HDD not initialized!'), MessageBox.TYPE_ERROR)
             return
 
         if isStandardInfoBar(self):
-            common = ((_('Add recording (stop after current event)'), 'event'),
-             (_('Add recording (indefinitely)'), 'indefinitely'),
-             (_('Add recording (enter recording duration)'), 'manualduration'),
-             (_('Add recording (enter recording endtime)'), 'manualendtime'))
+            common = ((_("Add recording (stop after current event)"), "event"),
+                    (_("Add recording (indefinitely)"), "indefinitely"),
+                    (_("Add recording (enter recording duration)"), "manualduration"),
+                    (_("Add recording (enter recording endtime)"), "manualendtime"),)
         else:
             common = ()
         if self.isInstantRecordRunning():
@@ -2841,143 +2843,143 @@ class InfoBarTimerButton():
     def timerSelection(self):
         from Screens.TimerEdit import TimerEditList
         self.session.open(TimerEditList)
-	
+    
 class InfoBarAspectSelection: 
-	STATE_HIDDEN = 0 
-	STATE_ASPECT = 1 
-	STATE_RESOLUTION = 2
-	def __init__(self): 
-		self["AspectSelectionAction"] = HelpableActionMap(self, "InfobarAspectSelectionActions", 
-			{ 
-				"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect list...")), 
-			}) 
+    STATE_HIDDEN = 0 
+    STATE_ASPECT = 1 
+    STATE_RESOLUTION = 2
+    def __init__(self): 
+        self["AspectSelectionAction"] = HelpableActionMap(self, "InfobarAspectSelectionActions", 
+            { 
+                "aspectSelection": (self.ExGreen_toggleGreen, _("Aspect list...")), 
+            }) 
 
-		self.__ExGreen_state = self.STATE_HIDDEN
+        self.__ExGreen_state = self.STATE_HIDDEN
 
-	def ExGreen_doAspect(self):
-		print "do self.STATE_ASPECT"
-		self.__ExGreen_state = self.STATE_ASPECT
-		self.aspectSelection()
+    def ExGreen_doAspect(self):
+        print "do self.STATE_ASPECT"
+        self.__ExGreen_state = self.STATE_ASPECT
+        self.aspectSelection()
 
-	def ExGreen_doResolution(self):
-		print "do self.STATE_RESOLUTION"
-		self.__ExGreen_state = self.STATE_RESOLUTION
-		self.resolutionSelection()
-		
-	def ExGreen_doHide(self):
-		print "do self.STATE_HIDDEN"
-		self.__ExGreen_state = self.STATE_HIDDEN 
+    def ExGreen_doResolution(self):
+        print "do self.STATE_RESOLUTION"
+        self.__ExGreen_state = self.STATE_RESOLUTION
+        self.resolutionSelection()
+        
+    def ExGreen_doHide(self):
+        print "do self.STATE_HIDDEN"
+        self.__ExGreen_state = self.STATE_HIDDEN 
 
-	def ExGreen_toggleGreen(self, arg=""):
-		print self.__ExGreen_state
-		if self.__ExGreen_state == self.STATE_HIDDEN:
-			print "self.STATE_HIDDEN"
-			self.ExGreen_doAspect()
-		elif self.__ExGreen_state == self.STATE_ASPECT:
-			print "self.STATE_ASPECT"
-			self.ExGreen_doResolution()
-		elif self.__ExGreen_state == self.STATE_RESOLUTION:
-			print "self.STATE_RESOLUTION"
-			self.ExGreen_doHide()
+    def ExGreen_toggleGreen(self, arg=""):
+        print self.__ExGreen_state
+        if self.__ExGreen_state == self.STATE_HIDDEN:
+            print "self.STATE_HIDDEN"
+            self.ExGreen_doAspect()
+        elif self.__ExGreen_state == self.STATE_ASPECT:
+            print "self.STATE_ASPECT"
+            self.ExGreen_doResolution()
+        elif self.__ExGreen_state == self.STATE_RESOLUTION:
+            print "self.STATE_RESOLUTION"
+            self.ExGreen_doHide()
 
-	def aspectSelection(self):
-		selection = 0
-		tlist= [(_("Resolution"), "resolution"),("--", ""),(_("4_3_letterbox"), "0"), (_("4_3_panscan"), "1"), (_("16_9"), "2"), (_("16_9_always"), "3"), (_("16_10_letterbox"), "4"), (_("16_10_panscan"), "5"), (_("16_9_letterbox"), "6")]
-		for x in range(len(tlist)):
-			selection = x
-		keys = ["green", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
-		self.session.openWithCallback(self.aspectSelected, ChoiceBox, title=_("Please select an aspect ratio..."), list = tlist, selection = selection, keys = keys)
+    def aspectSelection(self):
+        selection = 0
+        tlist= [(_("Resolution"), "resolution"),("--", ""),(_("4_3_letterbox"), "0"), (_("4_3_panscan"), "1"), (_("16_9"), "2"), (_("16_9_always"), "3"), (_("16_10_letterbox"), "4"), (_("16_10_panscan"), "5"), (_("16_9_letterbox"), "6")]
+        for x in range(len(tlist)):
+            selection = x
+        keys = ["green", "",  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+        self.session.openWithCallback(self.aspectSelected, ChoiceBox, title=_("Please select an aspect ratio..."), list = tlist, selection = selection, keys = keys)
 
-	def aspectSelected(self, aspect):
-		if not aspect is None:
-			if isinstance(aspect[1], str):
-				if aspect[1] == "":
-					self.ExGreen_doHide()
-				elif aspect[1] == "resolution":
-					self.ExGreen_toggleGreen()
-				else:
-					from Components.AVSwitch import AVSwitch
-					iAVSwitch = AVSwitch()
-					iAVSwitch.setAspectRatio(int(aspect[1]))
-					self.ExGreen_doHide()
-		else:
-			self.ExGreen_doHide()
-		return
+    def aspectSelected(self, aspect):
+        if not aspect is None:
+            if isinstance(aspect[1], str):
+                if aspect[1] == "":
+                    self.ExGreen_doHide()
+                elif aspect[1] == "resolution":
+                    self.ExGreen_toggleGreen()
+                else:
+                    from Components.AVSwitch import AVSwitch
+                    iAVSwitch = AVSwitch()
+                    iAVSwitch.setAspectRatio(int(aspect[1]))
+                    self.ExGreen_doHide()
+        else:
+            self.ExGreen_doHide()
+        return
 
 class InfoBarResolutionSelection:
-	def __init__(self):
-		return
+    def __init__(self):
+        return
 
-	def resolutionSelection(self):
-		f = open("/proc/stb/vmpeg/0/xres", "r")
-		xresString = f.read()
-		f.close()
-		f = open("/proc/stb/vmpeg/0/yres", "r")
-		yresString = f.read()
-		f.close()
-		if getBoxType().startswith('azbox'):
-			fpsString = '50000'
-		else:	
-			try:
-				f = open("/proc/stb/vmpeg/0/framerate", "r")
-				fpsString = f.read()
-				f.close()
-			except:
-				print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
-				fpsString = '50000'
-		
-		xres = int(xresString, 16)
-		yres = int(yresString, 16)
-		fps = int(fpsString)
-		fpsFloat = float(fps)
-		fpsFloat = fpsFloat/1000
+    def resolutionSelection(self):
+        f = open("/proc/stb/vmpeg/0/xres", "r")
+        xresString = f.read()
+        f.close()
+        f = open("/proc/stb/vmpeg/0/yres", "r")
+        yresString = f.read()
+        f.close()
+        if getBoxType().startswith('azbox'):
+            fpsString = '50000'
+        else:   
+            try:
+                f = open("/proc/stb/vmpeg/0/framerate", "r")
+                fpsString = f.read()
+                f.close()
+            except:
+                print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+                fpsString = '50000'
+        
+        xres = int(xresString, 16)
+        yres = int(yresString, 16)
+        fps = int(fpsString)
+        fpsFloat = float(fps)
+        fpsFloat = fpsFloat/1000
 
-		# do we need a new sorting with this way here?
-		# or should we disable some choices?
-		choices = []
-		if os.path.exists("/proc/stb/video/videomode_choices"):
-			f = open("/proc/stb/video/videomode_choices")
-			values = f.readline().replace("\n", "").replace("pal ", "").replace("ntsc ", "").split(" ", -1)
-			for x in values:
-				entry = x.replace('i50', 'i@50hz').replace('i60', 'i@60hz').replace('p23', 'p@23.976hz').replace('p24', 'p@24hz').replace('p25', 'p@25hz').replace('p29', 'p@29hz').replace('p30', 'p@30hz').replace('p50', 'p@50hz'), x
-				choices.append(entry)
-			f.close()
+        # do we need a new sorting with this way here?
+        # or should we disable some choices?
+        choices = []
+        if os.path.exists("/proc/stb/video/videomode_choices"):
+            f = open("/proc/stb/video/videomode_choices")
+            values = f.readline().replace("\n", "").replace("pal ", "").replace("ntsc ", "").split(" ", -1)
+            for x in values:
+                entry = x.replace('i50', 'i@50hz').replace('i60', 'i@60hz').replace('p23', 'p@23.976hz').replace('p24', 'p@24hz').replace('p25', 'p@25hz').replace('p29', 'p@29hz').replace('p30', 'p@30hz').replace('p50', 'p@50hz'), x
+                choices.append(entry)
+            f.close()
 
-		selection = 0
-		tlist = []
-		tlist.append((_("Exit"), "exit")) 
-		tlist.append((_("Auto(not available)"), "auto"))
-		tlist.append((_("Video: ") + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
-		tlist.append(("--", ""))
-		if choices != []:
-			for x in choices:
-				tlist.append(x)
+        selection = 0
+        tlist = []
+        tlist.append((_("Exit"), "exit")) 
+        tlist.append((_("Auto(not available)"), "auto"))
+        tlist.append((_("Video: ") + str(xres) + "x" + str(yres) + "@" + str(fpsFloat) + "hz", ""))
+        tlist.append(("--", ""))
+        if choices != []:
+            for x in choices:
+                tlist.append(x)
 
-		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+        keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
 
-		mode = open("/proc/stb/video/videomode").read()[:-1]
-		print mode
-		for x in range(len(tlist)):
-			if tlist[x][1] == mode:
-				selection = x
+        mode = open("/proc/stb/video/videomode").read()[:-1]
+        print mode
+        for x in range(len(tlist)):
+            if tlist[x][1] == mode:
+                selection = x
 
-		self.session.openWithCallback(self.ResolutionSelected, ChoiceBox, title=_("Please select a resolution..."), list = tlist, selection = selection, keys = keys)
+        self.session.openWithCallback(self.ResolutionSelected, ChoiceBox, title=_("Please select a resolution..."), list = tlist, selection = selection, keys = keys)
 
-	def ResolutionSelected(self, Resolution):
-		if not Resolution is None:
-			if isinstance(Resolution[1], str):
-				if Resolution[1] == "exit" or Resolution[1] == "" or Resolution[1] == "auto":
-					self.ExGreen_toggleGreen()
-				if Resolution[1] != "auto":
-					f = open("/proc/stb/video/videomode", "w")
-					f.write(Resolution[1])
-					f.close()
-					#from enigma import gMainDC
-					#gMainDC.getInstance().setResolution(-1, -1)
-					self.ExGreen_doHide()
-		else:
-			self.ExGreen_doHide()
-		return
+    def ResolutionSelected(self, Resolution):
+        if not Resolution is None:
+            if isinstance(Resolution[1], str):
+                if Resolution[1] == "exit" or Resolution[1] == "" or Resolution[1] == "auto":
+                    self.ExGreen_toggleGreen()
+                if Resolution[1] != "auto":
+                    f = open("/proc/stb/video/videomode", "w")
+                    f.write(Resolution[1])
+                    f.close()
+                    #from enigma import gMainDC
+                    #gMainDC.getInstance().setResolution(-1, -1)
+                    self.ExGreen_doHide()
+        else:
+            self.ExGreen_doHide()
+        return
 
 class InfoBarVmodeButton():
 
@@ -3366,17 +3368,17 @@ class InfoBarSubtitleSupport(object):
             return 0
 
     def doCenterDVBSubs(self):
-	service = self.session.nav.getCurrentlyPlayingServiceReference()
-	servicepath = service and service.getPath()
-	if servicepath and servicepath.startswith("/"):
-		if service.toString().startswith("1:"):
-			info = eServiceCenter.getInstance().info(service)
-			service = info and info.getInfoString(service, iServiceInformation.sServiceref)
-			config.subtitles.dvb_subtitles_centered.value = service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & self.FLAG_CENTER_DVB_SUBS and True
-			return
-	service = self.session.nav.getCurrentService()
-	info = service and service.info()
-	config.subtitles.dvb_subtitles_centered.value = info and info.getInfo(iServiceInformation.sCenterDVBSubs) and True
+        service = self.session.nav.getCurrentlyPlayingServiceReference()
+        servicepath = service and service.getPath()
+        if servicepath and servicepath.startswith("/"):
+            if service.toString().startswith("1:"):
+               info = eServiceCenter.getInstance().info(service)
+               service = info and info.getInfoString(service, iServiceInformation.sServiceref)
+               config.subtitles.dvb_subtitles_centered.value = service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & self.FLAG_CENTER_DVB_SUBS and True
+               return
+        service = self.session.nav.getCurrentService()
+        info = service and service.info()
+        config.subtitles.dvb_subtitles_centered.value = info and info.getInfo(iServiceInformation.sCenterDVBSubs) and True
 
     def __serviceChanged(self):
         if self.selected_subtitle:
@@ -3389,7 +3391,7 @@ class InfoBarSubtitleSupport(object):
             cachedsubtitle = subtitle and subtitle.getCachedSubtitle()
             if cachedsubtitle:
                 self.enableSubtitle(cachedsubtitle)
-		self.doCenterDVBSubs()
+        self.doCenterDVBSubs()
 
     def enableSubtitle(self, selectedSubtitle):
         subtitle = self.getCurrentServiceSubtitle()
