@@ -464,6 +464,8 @@ class ChannelContextMenu(Screen):
 
     def addParentalProtection(self, service):
         self.parentalControl.protectService(service.toCompareString())
+        if config.ParentalControl.hideBlacklist.value and not self.parentalControl.sessionPinCached:
+                self.csel.servicelist.resetRoot()
         self.close()
 
     def removeParentalProtection(self, service):
@@ -471,14 +473,14 @@ class ChannelContextMenu(Screen):
 
     def pinEntered(self, service, answer):
         if answer:
-            self.parentalControl.unProtectService(service)
-        if config.ParentalControl.hideBlacklist.value and not self.parentalControl.sessionPinCached:
-            self.csel.servicelist.resetRoot()
-            self.close()
+               self.parentalControl.unProtectService(service)
+               if config.ParentalControl.hideBlacklist.value and not self.parentalControl.sessionPinCached:
+                       self.csel.servicelist.resetRoot()
+               self.close()
         elif answer is not None:
-            self.session.openWithCallback(self.close, MessageBox, _('The pin code you entered is wrong.'), MessageBox.TYPE_ERROR)
+               self.session.openWithCallback(self.close, MessageBox, _("The pin code you entered is wrong."), MessageBox.TYPE_ERROR)
         else:
-            self.close()
+               self.close()
 
     def unhideParentalServices(self):
         if self.csel.protectContextMenu:
