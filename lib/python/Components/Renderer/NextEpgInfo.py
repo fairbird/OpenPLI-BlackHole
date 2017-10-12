@@ -43,6 +43,7 @@ class NextEpgInfo(Renderer, VariableText):
 							self.text = self.text and "%s%s\n%s" % (self.labelcolor, pgettext("now/next: 'next' event label", "Next"), self.text) or ""
 
 	def applySkin(self, desktop, parent):
+		attribs = []
 		for (attrib, value) in self.skinAttributes:
 			if attrib == "NumberOfItems":
 				self.numberOfItems = int(value)
