@@ -26,12 +26,9 @@ def getFlashDateString():
 
 def getEnigmaVersionString():
 	import enigma
-	enigma_version = enigma.getEnigmaVersionString().rsplit("-", 2)
-	if len(enigma_version) == 3:
-		enigma_version = enigma_version[0] + " " + enigma_version[2] + "-" + enigma_version[1]
-	else:
-		enigma_version = " ".join(enigma_version)
-	return enigma_version
+	enigma_version = enigma.getEnigmaVersionString()
+	if len(enigma_version) > 11:
+		enigma_version = enigma_version[:10] + " " + enigma_version[11:]
 
 def getGStreamerVersionString():
 	import enigma
