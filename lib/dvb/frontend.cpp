@@ -1062,6 +1062,10 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 		if (snr != 0)
 			ret = 10 * (int)(-100 * (log10(snr) - log10(255)));
 	}
+	else if (strstr(m_description, "Si2166B")) // DM7080HD/DM7020HD/DM820/DM800se DVB-S2 Dual NIM
+	{
+		ret = (snr * 240) >> 8;
+	}
 	else if (strstr(m_description, "BCM4506") || strstr(m_description, "BCM4505"))
 	{
 		ret = (snr * 100) >> 8;
@@ -1113,6 +1117,76 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 		oparm.getDVBC(parm);
 		switch (parm.modulation)
 		{
+		case eDVBFrontendParametersCable::Modulation_QAM16: ret = fe_udiv(1950000, (32 * mse) + 138) + 1000; break;
+		case eDVBFrontendParametersCable::Modulation_QAM32: ret = fe_udiv(2150000, (40 * mse) + 500) + 1350; break;
+		case eDVBFrontendParametersCable::Modulation_QAM64: ret = fe_udiv(2100000, (40 * mse) + 500) + 1250; break;
+		case eDVBFrontendParametersCable::Modulation_QAM128: ret = fe_udiv(1850000, (38 * mse) + 400) + 1380; break;
+		case eDVBFrontendParametersCable::Modulation_QAM256: ret = fe_udiv(1800000, (100 * mse) + 40) + 2030; break;
+		default: break;
+		}
+	}
+	else if (!strcmp(m_description, "Philips TU1216"))
+	{
+		snr = 0xFF - (snr & 0xFF);
+		if (snr != 0)
+			ret = 10 * (int)(-100 * (log10(snr) - log10(255)));
+	}
+	else if (strstr(m_description, "Si2166B")) // DM7080HD/DM7020HD/DM820/DM800se DVB-S2 Dual NIM
+	{
+		ret = (snr * 240) >> 8;
+	}
+	else if (strstr(m_description, "BCM4506") || strstr(m_description, "BCM4505"))
+	{
+		ret = (snr * 100) >> 8;
+	}
+	else if (!strcmp(m_description, "Vuplus DVB-S NIM(AVL2108)")) // VU+Ultimo/VU+Uno DVB-S2 NIM
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1600) + 0.2100) * 100);
+	}
+	else if (!strcmp(m_description, "Vuplus DVB-S NIM(AVL6222)")) // VU+ DVB-S2 Dual NIM
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1244) + 2.5079) * 100);
+		sat_max = 1490;
+	}
+	else if (!strcmp(m_description, "Vuplus DVB-S NIM(AVL6211)")) // VU+ DVB-S2 Dual NIM
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1244) + 2.5079) * 100);
+	}
+	else if (!strcmp(m_description, "BCM7335 DVB-S2 NIM (internal)")) // VU+DUO DVB-S2 NIM
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1244) + 2.5079) * 100);
+	}
+	else if (!strcmp(m_description, "BCM7346 (internal)")) // MaxDigital XP1000
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1880) + 0.1959) * 100);
+	}
+	else if (!strcmp(m_description, "BCM7356 DVB-S2 NIM (internal)")) // VU+ Solo2
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1800) - 1.0000) * 100);
+	}
+	else if (!strcmp(m_description, "Vuplus DVB-S NIM(7376 FBC)")) // VU+ Solo4k
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1480) + 0.9560) * 100);
+	}
+	else if (!strcmp(m_description, "BCM7362 (internal) DVB-S2")) // Xsarius
+	{
+		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.28) - 10.0) * 100);
+	}
+	else if (!strcmp(m_description, "BCM7584 (internal)"))
+	{
+		ret = snr / 10;
+	}
+	else if (!strcmp(m_description, "Genpix"))
+	{
+		ret = (int)((snr << 1) / 5);
+	}
+	else if (!strcmp(m_description, "CXD1981"))
+	{
+		eDVBFrontendParametersCable parm;
+		int mse = (~snr) & 0xFF;
+		oparm.getDVBC(parm);
+		switch (parm.modulation)
+		{
 		case eDVBFrontendParametersCable::Modulation_QAM16:
 		case eDVBFrontendParametersCable::Modulation_QAM64:
 		case eDVBFrontendParametersCable::Modulation_QAM256: ret = (int)(-950 * log(((double)mse) / 760)); break;
@@ -1122,14 +1196,14 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 		}
 	}
 	else if (!strcmp(m_description, "Broadcom BCM73XX") ||
- 			 !strcmp(m_description, "FTS-260 (Montage RS6000)") ||
- 			 !strcmp(m_description, "Panasonic MN88472") ||
- 			 !strcmp(m_description, "Panasonic MN88473"))
- 	{
- 		ret = snr * 100 / 256;
- 		if (!strcmp(m_description, "FTS-260 (Montage RS6000)"))
- 			sat_max = 1490;
- 	}
+			 !strcmp(m_description, "FTS-260 (Montage RS6000)") ||
+			 !strcmp(m_description, "Panasonic MN88472") ||
+			 !strcmp(m_description, "Panasonic MN88473"))
+	{
+		ret = snr * 100 / 256;
+		if (!strcmp(m_description, "FTS-260 (Montage RS6000)"))
+			sat_max = 1490;
+	}
 	else if (!strcmp(m_description, "Si216x"))
 	{
 		eDVBFrontendParametersTerrestrial parm;
