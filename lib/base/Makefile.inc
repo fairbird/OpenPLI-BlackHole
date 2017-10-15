@@ -20,6 +20,7 @@ base_libenigma_base_a_SOURCES = \
 	base/rawfile.cpp \
 	base/smartptr.cpp \
 	base/thread.cpp \
+	base/httpsstream.cpp \
 	base/httpstream.cpp \
 	base/wrappers.cpp \
         base/etpm.cpp
@@ -53,6 +54,7 @@ baseinclude_HEADERS = \
 	base/ringbuffer.h \
 	base/smartptr.h \
 	base/thread.h \
+	base/httpsstream.h \
 	base/httpstream.h \
 	base/wrappers.h \
         base/etpm.h
