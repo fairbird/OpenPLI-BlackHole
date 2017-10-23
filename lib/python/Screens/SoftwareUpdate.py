@@ -83,42 +83,8 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		socket.setdefaulttimeout(3)
 		message = ""
 		picon = None
-		default = True
-		#try:
-			# TODO: Use Twisted's URL fetcher, urlopen is evil. And it can
-			# run in parallel to the package update.
-			#status = urlopen("https://openpli.org/status/").read().split('!', 1)
-			#if getBoxType() in status[0].split(','):
-			#	message = len(status) > 1 and status[1] or _("The current beta image might not be stable.\nFor more information see %s.") % ("www.tunisia-sat")
-			#	picon = MessageBox.TYPE_ERROR
-			#	default = False
-		#except:
-			#message = _("The status of the current beta image could not be checked because %s can not be reached.") % ("www.tunisia-sat")
-			#picon = MessageBox.TYPE_ERROR
-			#default = False
-		#socket.setdefaulttimeout(currentTimeoutDefault)
-		#if default:
-		#	self.showDisclaimer()
-		#else:
 		message += "\n" + _("Do you want to update your receiver?")
 		self.session.openWithCallback(self.startActualUpdate, MessageBox, message, default = default, picon = picon)
-
-	def showDisclaimer(self, justShow=False):
-		if config.usage.show_update_disclaimer.value or justShow:
-			message = _("The Black Hole team would like to point out that upgrading to the latest nightly build comes not only with the latest features, but also with some risks. After the update, it is possible that your device no longer works as expected. We recommend you create backups with Autobackup or Backupsuite. This allows you to quickly and easily restore your device to its previous state, should you experience any problems. If you encounter a 'bug', please report the issue on www.tunisia-sat.\n\nDo you understand this?")
-			list = not justShow and [(_("no"), False), (_("yes"), True), (_("yes") + " " + _("and never show this message again"), "never")] or []
-			self.session.openWithCallback(boundFunction(self.disclaimerCallback, justShow), MessageBox, message, list=list)
-		else:
-			self.startActualUpdate(True)
-
-	def disclaimerCallback(self, justShow, answer):
-		if answer == "never":
-			config.usage.show_update_disclaimer.value = False
-			config.usage.show_update_disclaimer.save()
-		if justShow and answer:
-			self.ipkgCallback(IpkgComponent.EVENT_DONE, None)
-		else:
-			self.startActualUpdate(answer)
 
 	def getLatestImageTimestamp(self):
 		currentTimeoutDefault = socket.getdefaulttimeout()
@@ -220,8 +186,6 @@ class UpdatePlugin(Screen, ProtectedScreen):
 				if fileExists("/home/root/ipkgupgrade.log"):
 					choices.append((_("Show latest upgrade log"), "log"))
 				choices.append((_("Show latest commits"), "commits"))
-				if not config.usage.show_update_disclaimer.value:
-					choices.append((_("Show disclaimer"), "disclaimer"))
 				choices.append((_("Cancel"), ""))
 				self.session.openWithCallback(self.startActualUpgrade, ChoiceBox, title=message, list=choices)
 			elif self.channellist_only > 0:
@@ -277,8 +241,6 @@ class UpdatePlugin(Screen, ProtectedScreen):
 			self.ipkg.startCmd(IpkgComponent.CMD_LIST, args = {'installed_only': True})
 		elif answer[1] == "commits":
 			self.session.openWithCallback(boundFunction(self.ipkgCallback, IpkgComponent.EVENT_DONE, None), CommitInfo)
-		elif answer[1] == "disclaimer":
-			self.showDisclaimer(justShow=True)
 		elif answer[1] == "showlist":
 			text = "\n".join([x[0] for x in sorted(self.ipkg.getFetchedList(), key=lambda d: d[0])])
 			self.session.openWithCallback(boundFunction(self.ipkgCallback, IpkgComponent.EVENT_DONE, None), TextBox, text, _("Latest upgrade log"), True)
