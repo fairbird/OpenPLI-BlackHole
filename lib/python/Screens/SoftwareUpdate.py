@@ -75,7 +75,6 @@ class UpdatePlugin(Screen, ProtectedScreen):
 			config.ParentalControl.config_sections.software_update.value
 
 	def checkTraficLight(self):
-
 		self.activityTimer.callback.remove(self.checkTraficLight)
 		self.activityTimer.start(100, False)
 
@@ -84,7 +83,7 @@ class UpdatePlugin(Screen, ProtectedScreen):
 		message = ""
 		picon = None
 		message += "\n" + _("Do you want to update your receiver?")
-		self.session.openWithCallback(self.startActualUpdate, MessageBox, message, default = default, picon = picon)
+		self.session.openWithCallback(self.startActualUpdate, MessageBox, message, picon = picon)
 
 	def getLatestImageTimestamp(self):
 		currentTimeoutDefault = socket.getdefaulttimeout()
