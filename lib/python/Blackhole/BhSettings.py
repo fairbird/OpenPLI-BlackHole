@@ -1122,6 +1122,7 @@ class BhSpeedUp(Screen, ConfigListScreen):
          ['BhPersonalBackup', 'bhpersonalbackup'],
          ['BhEpgBackup', 'bhepgbackup'],
          ['Meoboot', 'enigma2-plugin-extensions-meoboot'],
+         ['FlashExpander', 'enigma2-plugin-extensions-flashexpander'],
          ['dflash BlackHole', 'enigma2-plugin-extensions-dflash'],
          ['AutoResolution', 'enigma2-plugin-systemplugins-autoresolution'],
          ['CommonInterfaceAssignment', 'enigma2-plugin-systemplugins-commoninterfaceassignment'],
