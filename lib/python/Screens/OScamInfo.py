@@ -655,7 +655,6 @@ class oscECMInfo(Screen, OscamInfo):
         self['output'].l.setList(out)
         self['output'].selectionEnabled(False)
 
-
 class oscInfo(Screen, OscamInfo):
 
     def __init__(self, session, what):
@@ -701,17 +700,17 @@ class oscInfo(Screen, OscamInfo):
             self['key_yellow'] = StaticText(_('Servers'))
             self['key_blue'] = StaticText(_('Log'))
         elif self.what == 's':
-            self['key_green'] = StaticText(_('Clients')
+            self['key_green'] = StaticText(_('Clients'))
             self['key_yellow'] = StaticText('')
-            self['key_blue'] = StaticText(_('Log')
+            self['key_blue'] = StaticText(_('Log'))
         elif self.what == 'l':
-            self['key_green'] = StaticText(_('Clients')
-            self['key_yellow'] = StaticText(_('Servers')
+            self['key_green'] = StaticText(_('Clients'))
+            self['key_yellow'] = StaticText(_('Servers'))
             self['key_blue'] = StaticText('')
         else:
-            self['key_green'] = StaticText(_('Clients')
-            self['key_yellow'] = StaticText(_('Servers')
-            self['key_blue'] = StaticText(_('Log')
+            self['key_green'] = StaticText(_('Clients'))
+            self['key_yellow'] = StaticText(_('Servers'))
+            self['key_blue'] = StaticText(_('Log'))
         if config.oscaminfo.autoupdate.value:
             self.loop = eTimer()
             self.loop.callback.append(self.showData)
@@ -915,17 +914,17 @@ class oscInfo(Screen, OscamInfo):
             if self.what == 'c':
                 self.setTitle(_('Client Info ( Oscam-Version: %s )') % self.getVersion())
                 self['key_green'].setText('')
-                self['key_yellow'].setText(_('Servers')
-                self['key_blue'].setText(_('Log')
+                self['key_yellow'].setText(_('Servers'))
+                self['key_blue'].setText(_('Log'))
             elif self.what == 's':
                 self.setTitle(_('Server Info ( Oscam-Version: %s )') % self.getVersion())
-                self['key_green'].setText(_('Clients')
+                self['key_green'].setText(_('Clients'))
                 self['key_yellow'].setText('')
-                self['key_blue'].setText(_('Log')
+                self['key_blue'].setText(_('Log'))
             elif self.what == 'l':
                 self.setTitle(_('Oscam Log ( Oscam-Version: %s )') % self.getVersion())
-                self['key_green'].setText(_('Clients')
-                self['key_yellow'].setText(_('Servers')
+                self['key_green'].setText(_('Clients'))
+                self['key_yellow'].setText(_('Servers'))
                 self['key_blue'].setText('')
                 self.itemheight = 20
         else:
@@ -1120,7 +1119,7 @@ class oscReaderStats(Screen, OscamInfo):
         caids = data.keys()
         caids.sort()
         outlist = []
-        res = [('CAID', 'System', '1', '2', '3', '4', '5', 'Total', 'Reshare', '')]
+        res = [('CAID', 'System', '1', '2', '3', '4', '5', 'Total', _('Reshare'), '')]
         for i in caids:
             csum = 0
             ca_id = i
