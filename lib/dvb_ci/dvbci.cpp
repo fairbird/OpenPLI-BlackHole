@@ -35,6 +35,12 @@
 
 eDVBCIInterfaces *eDVBCIInterfaces::instance = 0;
 
+static std::string getTunerLetterDM(int NimNumber)
+{
+	char *srcCI = readInputCI(NimNumber);
+	if (srcCI) return std::string(srcCI);
+	return eDVBCISlot::getTunerLetter(NimNumber);
+}
 
 eCIClient::eCIClient(eDVBCIInterfaces *handler, int socket) : eUnixDomainSocket(socket, 1, eApp), parent(handler)
 {
@@ -175,7 +181,11 @@ eDVBCIInterfaces::eDVBCIInterfaces()
 	}
 
 	for (eSmartPtrList<eDVBCISlot>::iterator it(m_slots.begin()); it != m_slots.end(); ++it)
+#ifdef DREAMBOX_DUAL_TUNER
+		it->setSource(getTunerLetterDM(0));
+#else
 		it->setSource("A");
+#endif
 
 	for (int tuner_no = 0; tuner_no < 26; ++tuner_no) // NOTE: this assumes tuners are A .. Z max.
 	{
@@ -186,7 +196,11 @@ eDVBCIInterfaces::eDVBCIInterfaces()
 		if(::access(path.str().c_str(), R_OK) < 0)
 			break;
 
+#ifdef DREAMBOX_DUAL_TUNER
+		setInputSource(tuner_no, getTunerLetterDM(tuner_no));
+#else
 		setInputSource(tuner_no, eDVBCISlot::getTunerLetter(tuner_no));
+#endif
 	}
 
 	eDebug("[CI] done, found %d common interface slots", num_ci);
@@ -604,7 +618,11 @@ void eDVBCIInterfaces::recheckPMTHandlers()
 						if (tunernum != -1)
 						{
 							setInputSource(tunernum, ci_source.str());
-							ci_it->setSource(eDVBCISlot::getTunerLetter(tunernum));
+#ifdef DREAMBOX_DUAL_TUNER
+							ci_it->setSource(getTunerLetterDM(tunernum));
+#else
+  							ci_it->setSource(eDVBCISlot::getTunerLetter(tunernum));
+#endif
 						}
 						else
 						{
@@ -699,8 +717,12 @@ void eDVBCIInterfaces::removePMTHandler(eDVBServicePMTHandler *pmthandler)
 				slot->sendCAPMT(pmthandler, caids);  // send a capmt without caids to remove a running service
 				slot->removeService(service_to_remove.getServiceID().get());
 				/* restore ci source to the default (tuner "A") */
+#ifdef DREAMBOX_DUAL_TUNER
+				slot->setSource(getTunerLetterDM(0));
+#else
 				if (slot->current_tuner == -1)
 					slot->setSource("A");
+#endif
 			}
 
 			if (!--slot->use_count)
@@ -1321,8 +1343,13 @@ int eDVBCISlot::setSource(const std::string &source)
 {
 	char buf[64];
 	current_source = source;
-
 	snprintf(buf, sizeof(buf), "/proc/stb/tsmux/ci%d_input", slotid);
+	char *srcCI = NULL;
+
+	if(source.find("CI") == std::string::npos || source.size() == 1)
+	{
+		srcCI = readInputCI(source[0]-65);
+	}
 
 	if(CFile::write(buf, source.c_str()) == -1)
 	{
