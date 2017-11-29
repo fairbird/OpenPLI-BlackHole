@@ -1070,6 +1070,10 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	{
 		ret = (snr * 100) >> 8;
 	}
+	else if (!strcmp(m_description, "ATBM781x"))
+	{
+		ret = snr*10;
+	}
 	else if (!strcmp(m_description, "Vuplus DVB-S NIM(AVL2108)")) // VU+Ultimo/VU+Uno DVB-S2 NIM
 	{
 		ret = (int)((((double(snr) / (65536.0 / 100.0)) * 0.1600) + 0.2100) * 100);
@@ -1253,6 +1257,10 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 				sat_max = 1550;
 				break;
 		}
+	}
+	else if (!strncmp(m_description, "Si216", 5)) // New models with SI tuners
+	{
+		ret = snr;
 	}
 
 	signalqualitydb = ret;
