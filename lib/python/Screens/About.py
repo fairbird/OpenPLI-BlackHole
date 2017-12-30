@@ -56,11 +56,11 @@ class About(Screen):
         # as I'm not sure this variable isn't used elsewhere, I haven't removed it
 
         EnigmaVersion = about.getEnigmaVersionString().rsplit("-", 2)
-		if len(EnigmaVersion) == 3:
-			EnigmaVersion = EnigmaVersion[0] + " " + EnigmaVersion[2] + "-" + EnigmaVersion[1]
-		else:
-			EnigmaVersion = " ".join(EnigmaVersion)
-		EnigmaVersion = _("Enigma version: ") + EnigmaVersion
+        if len(EnigmaVersion) == 3:
+            EnigmaVersion = EnigmaVersion[0] + " " + EnigmaVersion[2] + "-" + EnigmaVersion[1]
+        else:
+            EnigmaVersion = " ".join(EnigmaVersion)
+        EnigmaVersion = _("Enigma version: ") + EnigmaVersion
         self["EnigmaVersion"] = StaticText(EnigmaVersion)
         AboutText += "\n" + EnigmaVersion + "\n"
 
