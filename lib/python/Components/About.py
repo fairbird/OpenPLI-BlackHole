@@ -37,7 +37,7 @@ def getBuildDateString():
 def getEnigmaVersionString():
         import enigma
         enigma_version = " ".join(enigma.getEnigmaVersionString().rsplit("-", 1)).title()
-	if ' (no branch)' in enigma_version:
+	if '-(no branch)' in enigma_version:
   		enigma_version = enigma_version [:-12]
   	return enigma_version
 
