@@ -1011,8 +1011,9 @@ def readSkin(screen, skin, names, desktop):
      'ePixmap': process_epixmap,
      'panel': process_panel}
     try:
-        context.x = 0
-        context.y = 0
+	print "[Skin] Processing screen: %s" % name
+        context.x = 0 # reset offsets, all components are relative to screen
+        context.y = 0 # coordinates.
         process_screen(myscreen, context)
     except Exception as e:
         print '[Skin] SKIN ERROR in %s:' % name, e
