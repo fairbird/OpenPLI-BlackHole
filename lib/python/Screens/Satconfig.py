@@ -306,8 +306,8 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		else:
 			self.have_advanced = False
 
-		if config.usage.setup_level.index > 1:
-			self.list.append(getConfigListEntry(_("Force Legacy Signal Stats"), self.nimConfig.force_legacy_signal_stats))
+		if self.nimConfig.configMode.value != "nothing" and config.usage.setup_level.index > 1:
+			self.list.append(getConfigListEntry(_("Force legacy signal stats"), self.nimConfig.force_legacy_signal_stats))
 
 		self["config"].list = self.list
 		self["config"].l.setList(self.list)
