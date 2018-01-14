@@ -1230,9 +1230,9 @@ def InitNimManager(nimmgr, update_slots = []):
                                         section.unicableProduct.addNotifier(boundFunction(unicableProductChanged, configEntry.value, lnb_or_matrix))
                                 def userScrListChanged(srcfrequencyList, configEntry):
                                         section.scrfrequency = ConfigInteger(default=int(srcfrequencyList[configEntry.index]), limits = (0, 99999))
-+					section.lofl = ConfigInteger(default=9750, limits = (0, 99999))
-+					section.lofh = ConfigInteger(default=10600, limits = (0, 99999))
-+					section.threshold = ConfigInteger(default=11700, limits = (0, 99999))
+					section.lofl = ConfigInteger(default=9750, limits = (0, 99999))
+					section.lofh = ConfigInteger(default=10600, limits = (0, 99999))
+					section.threshold = ConfigInteger(default=11700, limits = (0, 99999))
                                 def formatChanged(configEntry):
                                         section.positions = ConfigInteger(default=configEntry.value == "jess" and 64 or 2)
                                         section.positions.addNotifier(positionsChanged)
