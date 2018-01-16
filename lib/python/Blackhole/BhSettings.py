@@ -740,17 +740,20 @@ class Bp_UsbFormat(Screen):
 
     def __init__(self, session):
         Screen.__init__(self, session)
-        msg = _('This wizard will help you to format Usb mass storage devices for Linux.\n')
-        msg += _('Please be sure that your usb drive is NOT CONNECTED to your Dreambox box before you continue.\n')
-        msg += _('If your usb drive is connected and mounted you have to poweroff your box, remove the usb device and reboot.\n')
-        msg += _('Press Red button to continue, when you are ready and your usb is disconnected.\n')
+        #msg = _('This wizard will help you to format Usb mass storage devices for Linux.\n')
+        #msg += _('Please be sure that your usb drive is NOT CONNECTED to your Dreambox box before you continue.\n')
+        #msg += _('If your usb drive is connected and mounted you have to poweroff your box, remove the usb device and reboot.\n')
+        #msg += _('Press Red button to continue, when you are ready and your usb is disconnected.\n')
+        msg = _('Press Red button to continue, when you are ready and your usb is connected.\n')
         self['key_red'] = Label(_('Continue ->'))
         self['key_green'] = Label(_('Cancel'))
         self['lab1'] = Label(msg)
         self['actions'] = ActionMap(['WizardActions', 'ColorActions'], {'back': self.checkClose,
          'red': self.step_Bump,
          'green': self.checkClose})
-        self.step = 1
+# skip setup 1 and 2
+#        self.step = 1
+        self.step = 3
         self.devices = []
         self.device = None
         self.totalpartitions = 1
@@ -828,7 +831,7 @@ class Bp_UsbFormat(Screen):
     def writePartFile(self):
         p1 = p2 = p3 = p4 = '0'
         device = '/dev/' + self.device
-        out0 = '#!/bin/sh\n\nsfdisk %s -uM << EOF\n' % device
+        out0 = '#!/bin/sh\n\nsfdisk %s << EOF\n' % device
         msg = _('Total Megabyte Available: \t') + str(self.totalsize)
         msg += _('\nPartition scheme:\n')
         p1 = self.p1size
@@ -891,7 +894,7 @@ class Bp_UsbFormat(Screen):
         menu = []
         menu.append((_('ext2 - recommended for USB flash memory'), 'ext2'))
         menu.append((_('ext3 - recommended for harddrives'), 'ext3'))
-        menu.append((_('ext4 - recommended for meoboot'), 'ext4'))
+        menu.append((_('ext4 - DM800 No support'), 'ext4'))
         menu.append((_('vfat - use only for media-files'), 'vfat'))
         self.session.openWithCallback(self.choiceBoxFstypeCB, ChoiceBox, title=_('Choice filesystem.'), list=menu)
 
@@ -975,7 +978,10 @@ class Bp_UsbFormat(Screen):
         self.session.openWithCallback(self.close, MessageBox, msg, MessageBox.TYPE_INFO)
 
     def succesS(self):
-        mybox = self.session.openWithCallback(self.hreBoot, MessageBox, _("The Box will be now restarted to generate a new device UID.\nDon't forget to remap your device after the reboot.\nPress ok to continue"), MessageBox.TYPE_INFO)
+        mybox = self.session.open(MessageBox, _("Foramted finish.\nYou can mount your Usb now.\nPress ok to continue"), MessageBox.TYPE_INFO)
+        self.close()
+# Remove reboot command
+#        mybox = self.session.openWithCallback(self.hreBoot, MessageBox, _("The Box will be now restarted to generate a new device UID.\nDon't forget to remap your device after the reboot.\nPress ok to continue"), MessageBox.TYPE_INFO)
 
     def hreBoot(self, answer):
         self.session.open(TryQuitMainloop, 2)

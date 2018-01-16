@@ -170,8 +170,8 @@ class BHDevicesPanel(Screen):
         self.session.openWithCallback(self.updateList, BHDevicesConf)
 
     def Format(self):
-        from Screens.HarddiskSetup import HarddiskSelection
-        self.session.openWithCallback(self.updateList, HarddiskSelection)
+        from BhSettings import Bp_UsbFormat
+        self.session.open(Bp_UsbFormat)
 
     def Mount(self):
         sel = self['list'].getCurrent()
