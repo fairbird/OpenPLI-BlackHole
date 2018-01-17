@@ -286,7 +286,6 @@ lib/python/Plugins/SystemPlugins/AnimationSetup/meta/Makefile
 lib/python/Blackhole/Makefile
 lib/python/Blackhole/DeviceManager/Makefile
 lib/python/Blackhole/DeviceManager/bin/Makefile
-lib/python/Blackhole/DeviceManager/bin/armv7l/Makefile
 lib/python/Blackhole/DeviceManager/bin/mips/Makefile
 lib/python/Blackhole/DeviceManager/icons/Makefile
 po/Makefile
