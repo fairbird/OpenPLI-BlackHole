@@ -40,8 +40,8 @@ class DeliteSettings(Screen):
         elif self.sel == 2:
             self.session.open(DeliteSetupOSD2)
         elif self.sel == 3:
-            from BHDevice import BHDevicesPanel
-            self.session.open(BHDevicesPanel)
+            from DeviceManager.HddSetup import HddSetup
+            self.session.open(HddSetup)
         elif self.sel == 4:
             from Screens.Setup import Setup
             self.session.open(Setup, 'subtitlesetup')
@@ -740,10 +740,10 @@ class Bp_UsbFormat(Screen):
 
     def __init__(self, session):
         Screen.__init__(self, session)
-        #msg = _('This wizard will help you to format Usb mass storage devices for Linux.\n')
-        #msg += _('Please be sure that your usb drive is NOT CONNECTED to your Dreambox box before you continue.\n')
-        #msg += _('If your usb drive is connected and mounted you have to poweroff your box, remove the usb device and reboot.\n')
-        #msg += _('Press Red button to continue, when you are ready and your usb is disconnected.\n')
+        msg = _('This wizard will help you to format Usb mass storage devices for Linux.\n')
+        msg += _('Please be sure that your usb drive is NOT CONNECTED to your Dreambox box before you continue.\n')
+        msg += _('If your usb drive is connected and mounted you have to poweroff your box, remove the usb device and reboot.\n')
+        msg += _('Press Red button to continue, when you are ready and your usb is disconnected.\n')
         msg = _('Press Red button to continue, when you are ready and your usb is connected.\n')
         self['key_red'] = Label(_('Continue ->'))
         self['key_green'] = Label(_('Cancel'))
@@ -751,8 +751,7 @@ class Bp_UsbFormat(Screen):
         self['actions'] = ActionMap(['WizardActions', 'ColorActions'], {'back': self.checkClose,
          'red': self.step_Bump,
          'green': self.checkClose})
-# skip setup 1 and 2
-#        self.step = 1
+        self.step = 1
         self.step = 3
         self.devices = []
         self.device = None
