@@ -65,18 +65,16 @@ class HddMountDevice(Screen):
 		self.fast = False
 
 		self.list = []
-		self.list.append(_("Mount as main hdd"))
-		self.list.append(_("Mount as /media/hdd1"))
-		self.list.append(_("Mount as /media/hdd2"))
-		self.list.append(_("Mount as /media/hdd3"))
-		self.list.append(_("Mount as /media/hdd4"))
-		self.list.append(_("Mount as /media/hdd5"))
+		self.list.append(_("Mount /universe"))
+		self.list.append(_("Mount as /media/hdd"))
+		self.list.append(_("Mount as /media/music"))
+		self.list.append(_("Mount as /media/download"))
+		self.list.append(_("Mount as /media/net"))
+		self.list.append(_("Mount as /media/personal"))
 		self.list.append(_("Mount as /media/usb"))
-		self.list.append(_("Mount as /media/usb1"))
-		self.list.append(_("Mount as /media/usb2"))
-		self.list.append(_("Mount as /media/usb3"))
-		self.list.append(_("Mount as /media/usb4"))
-		self.list.append(_("Mount as /media/usb5"))
+		self.list.append(_("Mount as /media/video"))
+		self.list.append(_("Mount as /media/sda1"))
+		self.list.append(_("Mount as /media/sdb1"))
 		self.list.append(_("Mount on custom path"))
 
 		self["menu"] = MenuList(self.list)
@@ -102,60 +100,52 @@ class HddMountDevice(Screen):
 		self.fast = False
 		selected = self["menu"].getSelectedIndex()
 		if selected == 0:
-			self.setMountPoint("/media/hdd")
+			self.setMountPoint("/universe")
 		elif selected == 1:
-			self.setMountPoint("/media/hdd1")
+			self.setMountPoint("/media/hdd")
 		elif selected == 2:
-			self.setMountPoint("/media/hdd2")
+			self.setMountPoint("/media/music")
 		elif selected == 3:
-			self.setMountPoint("/media/hdd3")
+			self.setMountPoint("/media/download")
 		elif selected == 4:
-			self.setMountPoint("/media/hdd4")
+			self.setMountPoint("/media/net")
 		elif selected == 5:
-			self.setMountPoint("/media/hdd5")
+			self.setMountPoint("/media/personal")
 		elif selected == 6:
 			self.setMountPoint("/media/usb")
 		elif selected == 7:
-			self.setMountPoint("/media/usb1")
+			self.setMountPoint("/media/video")
 		elif selected == 8:
-			self.setMountPoint("/media/usb2")
+			self.setMountPoint("/media/sda1")
 		elif selected == 9:
-			self.setMountPoint("/media/usb3")
+			self.setMountPoint("/media/sdb1")
 		elif selected == 10:
-			self.setMountPoint("/media/usb4")
-		elif selected == 11:
-			self.setMountPoint("/media/usb5")
-		elif selected == 12:
 			self.session.openWithCallback(self.customPath, VirtualKeyBoard, title = (_("Insert mount point:")), text = _("/media/custom"))
 
 	def green(self):
 		self.fast = True
 		selected = self["menu"].getSelectedIndex()
 		if selected == 0:
-			self.setMountPoint("/media/hdd")
+			self.setMountPoint("/universe")
 		elif selected == 1:
-			self.setMountPoint("/media/hdd1")
+			self.setMountPoint("/media/hdd")
 		elif selected == 2:
-			self.setMountPoint("/media/hdd2")
+			self.setMountPoint("/media/music")
 		elif selected == 3:
-			self.setMountPoint("/media/hdd3")
+			self.setMountPoint("/media/download")
 		elif selected == 4:
-			self.setMountPoint("/media/hdd4")
+			self.setMountPoint("/media/net")
 		elif selected == 5:
-			self.setMountPoint("/media/hdd5")
+			self.setMountPoint("/media/personal")
 		elif selected == 6:
 			self.setMountPoint("/media/usb")
 		elif selected == 7:
-			self.setMountPoint("/media/usb1")
+			self.setMountPoint("/media/video")
 		elif selected == 8:
-			self.setMountPoint("/media/usb2")
+			self.setMountPoint("/media/sda1")
 		elif selected == 9:
-			self.setMountPoint("/media/usb3")
+			self.setMountPoint("/media/sdb1")
 		elif selected == 10:
-			self.setMountPoint("/media/usb4")
-		elif selected == 11:
-			self.setMountPoint("/media/usb5")
-		elif selected == 12:
 			self.session.openWithCallback(self.customPath, VirtualKeyBoard, title = (_("Insert mount point:")), text = _("/media/custom"))
 
 	def customPath(self, result):
