@@ -12,7 +12,6 @@ from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 from Tools.StbHardware import getFPVersion
 from enigma import eTimer, eLabel, eConsoleAppContainer
-from Components.HTMLComponent import HTMLComponent
 from Components.GUIComponent import GUIComponent
 import skin, os
 
@@ -368,7 +367,7 @@ class MemoryInfo(Screen):
         self.getMemoryInfo()
 
 
-class MemoryInfoSkinParams(HTMLComponent, GUIComponent):
+class MemoryInfoSkinParams(GUIComponent):
 
     def __init__(self):
         GUIComponent.__init__(self)
