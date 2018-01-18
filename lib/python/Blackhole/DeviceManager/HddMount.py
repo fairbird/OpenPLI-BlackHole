@@ -75,6 +75,7 @@ class HddMountDevice(Screen):
 		self.list.append(_("Mount as /media/video"))
 		self.list.append(_("Mount as /media/sda1"))
 		self.list.append(_("Mount as /media/sdb1"))
+		self.list.append(_("Mount as /media/meoboot"))
 		self.list.append(_("Mount on custom path"))
 
 		self["menu"] = MenuList(self.list)
@@ -120,6 +121,8 @@ class HddMountDevice(Screen):
 		elif selected == 9:
 			self.setMountPoint("/media/sdb1")
 		elif selected == 10:
+			self.setMountPoint("/media/meoboot")
+		elif selected == 11:
 			self.session.openWithCallback(self.customPath, VirtualKeyBoard, title = (_("Insert mount point:")), text = _("/media/custom"))
 
 	def green(self):
@@ -146,6 +149,8 @@ class HddMountDevice(Screen):
 		elif selected == 9:
 			self.setMountPoint("/media/sdb1")
 		elif selected == 10:
+			self.setMountPoint("/media/meoboot")
+		elif selected == 11:
 			self.session.openWithCallback(self.customPath, VirtualKeyBoard, title = (_("Insert mount point:")), text = _("/media/custom"))
 
 	def customPath(self, result):
