@@ -1541,7 +1541,7 @@ class InfoBarSeek():
             self.ScreenSaverTimerStart()
         return True
 
-    def playpauseService(self):
+    def playpauseStreamService(self):
         if self.seekstate != self.SEEK_STATE_PLAY:
             self.unPauseService()
         else:
@@ -1880,7 +1880,7 @@ class InfoBarTimeshift():
             if not pauseService and not int(config.usage.timeshift_start_delay.value):
                 self.session.open(MessageBox, _('Timeshift not possible!'), MessageBox.TYPE_ERROR, simple=True)
             print 'no ts interface'
-            return self.playpauseService()
+            return self.playpauseStreamService()
 
         if ts.isTimeshiftEnabled():
             print 'hu, timeshift already enabled?'
