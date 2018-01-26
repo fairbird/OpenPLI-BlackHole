@@ -1873,7 +1873,7 @@ class InfoBarTimeshift(InfoBarSeek):
         ts = self.getTimeshift()
         return ts and ts.isTimeshiftActive()
 
-	def playpauseService(self):
+    def playpauseService(self):
 		service = self.session.nav.getCurrentService()
 		playingref = self.session.nav.getCurrentlyPlayingServiceReference()
 		if not playingref or playingref.type < eServiceReference.idUser:
