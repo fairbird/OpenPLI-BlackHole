@@ -338,10 +338,10 @@ static bool looksLikeRecording(const std::string& n)
 {
 	return
 		(n.size() > 19) &&
-		(n[8] == ' ') &&
-		(n[13] == ' ') &&
-		(n[14] == '-') &&
-		(n[15] == ' ') &&
+		(n[8] == " ") &&
+		(n[13] == " ") &&
+		(n[14] == "-") &&
+		(n[15] == " ") &&
 		(isdigit(n[0]));
 }
 
@@ -355,7 +355,7 @@ RESULT eStaticServiceDVBPVRInformation::getName(const eServiceReference &ref, st
 	else
 	{
 		name = ref.path;
-		size_t n = name.rfind('/');
+		size_t n = name.rfind("/");
 		if (n != std::string::npos)
 			name = name.substr(n + 1);
 		if (looksLikeRecording(name))
@@ -371,7 +371,7 @@ RESULT eStaticServiceDVBPVRInformation::getName(const eServiceReference &ref, st
 				}
 				name.erase(0,dash2+3);
 			}
-			if (name[name.size()-3] == '.')
+			if (name[name.size()-3] == ".")
 			{
 				name.erase(name.size()-3);
 			}
@@ -762,7 +762,7 @@ PyObject *eDVBServiceList::getContent(const char* format, bool sorted)
 		ePtr<iStaticServiceInformation> sptr;
 		eServiceCenterPtr service_center;
 
-		if (strchr(format, 'N') || strchr(format, 'n'))
+		if (strchr(format, "N") || strchr(format, "n"))
 			eServiceCenter::getPrivInstance(service_center);
 
 		ret = PyList_New(services);
@@ -777,16 +777,16 @@ PyObject *eDVBServiceList::getContent(const char* format, bool sorted)
 				ePyObject tmp;
 				switch(format[i])
 				{
-				case 'R':  // service reference (swig)object
+				case "R":  // service reference (swig)object
 					tmp = NEW_eServiceReference(ref);
 					break;
-				case 'C':  // service reference compare string
+				case "C":  // service reference compare string
 					tmp = PyString_FromString(ref.toCompareString().c_str());
 					break;
-				case 'S':  // service reference string
+				case "S":  // service reference string
 					tmp = PyString_FromString(ref.toString().c_str());
 					break;
-				case 'N':  // service name
+				case "N":  // service name
 					if (service_center)
 					{
 						service_center->info(ref, sptr);
@@ -809,7 +809,7 @@ PyObject *eDVBServiceList::getContent(const char* format, bool sorted)
 					if (!tmp)
 						tmp = PyString_FromString("<n/a>");
 					break;
-				case 'n':  // short service name
+				case "n":  // short service name
 					if (service_center)
 					{
 						service_center->info(ref, sptr);
@@ -2360,7 +2360,7 @@ bool eDVBServiceBase::tryFallbackTuner(eServiceReferenceDVB &service, bool &is_s
 	if(res_mgr->canAllocateChannel(chid, chid_ignore, system))	// this sets system
 		return false;
 
-	while((index = remote_fallback_url.find(':')) != std::string::npos)
+	while((index = remote_fallback_url.find(":")) != std::string::npos)
 	{
 		remote_fallback_url.erase(index, 1);
 		remote_fallback_url.insert(index, "%3a");
@@ -2483,7 +2483,7 @@ RESULT eDVBServicePlay::startTimeshift()
 		eDebug("[eDVBServicePlay] timeshift path is empty");
 		return -5;
 	}
-	if (tspath[tspath.length()-1] != '/')
+	if (tspath[tspath.length()-1] != "/")
 		tspath.append("/");
 	tspath.append("timeshift.XXXXXX");
 	char* templ = new char[tspath.length() + 1];
@@ -3260,7 +3260,7 @@ RESULT eDVBServicePlay::getCachedSubtitle(struct SubtitleTrack &track)
 					return 0;
 				}
 			}
-			if (stream != -1 && (tmp != 0 || !usecache))
+			if (stream != -1 && (tmp != 0 && usecache))
 			{
 				if (program.subtitleStreams[stream].subtitling_type == 1)
 				{
