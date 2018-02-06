@@ -246,6 +246,7 @@ def InitUsageConfig():
      ('5', 'DVB-T/-S/-C'),
      ('127', _('No priority'))])
     config.usage.remote_fallback_enabled = ConfigYesNo(default = False)
+    config.usage.remote_fallback_recording_enabled = ConfigYesNo(default = False)
     config.usage.remote_fallback = ConfigText(default='', fixed_size=False)
     config.usage.show_timer_conflict_warning = ConfigYesNo(default = True)
     dvbs_nims = [('-2', _('Disabled'))]
