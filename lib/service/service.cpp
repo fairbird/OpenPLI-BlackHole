@@ -33,6 +33,7 @@ eServiceReference::eServiceReference(const std::string &string)
 	number = 0;
 
 	if (string.empty())
+	{
 		type = idInvalid;
 		return;
 	}
