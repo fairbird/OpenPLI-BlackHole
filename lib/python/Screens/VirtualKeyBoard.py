@@ -83,7 +83,9 @@ class VirtualKeyBoard(Screen):
 		self.selectedKey = 0
 		self.smsChar = None
 		self.sms = NumericalTextInput(self.smsOK)		
-		self["country"] = StaticText("")
+		self["key_red"] = StaticText(_("Exit"))
+		self["key_green"] = StaticText(_("Save"))
+		self["key_yellow"] = self["country"] = StaticText("")
 		self["header"] = Label(title)
 		self["text"] = Input(currPos=len(kwargs.get("text", "").decode("utf-8",'ignore')), allMarked=False, **kwargs)
 		self["list"] = VirtualKeyBoardList([])
@@ -343,6 +345,7 @@ class VirtualKeyBoard(Screen):
 			self.lang = 'en_EN'
 			self.nextLang = 'ar_AE'
 		self["country"].setText(self.lang)
+		self["key_yellow"].setText(self.lang)
 		self.max_key=47+len(self.keys_list[4])
 
 	def buildVirtualKeyBoard(self, selectedKey=0):
