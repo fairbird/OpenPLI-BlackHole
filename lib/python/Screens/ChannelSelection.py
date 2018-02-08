@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ChannelSelection.py# -*- coding: utf-8 -*-
 from Tools.Profile import profile
 from Screen import Screen
 import Screens.InfoBar
@@ -122,6 +122,7 @@ class ChannelContextMenu(Screen):
 
     def __init__(self, session, csel):
         Screen.__init__(self, session)
+	self.setTitle(_("Channel context menu"))
         self.csel = csel
         self.bsel = None
         if self.isProtected():
