@@ -28,7 +28,7 @@
 #include <lib/service/event.h>
 #include <lib/python/python.h>
 
-class eventData;
+struct eventData;
 class eServiceReferenceDVB;
 class eDVBServicePMTHandler;
 
@@ -244,8 +244,8 @@ public:
 	};
 	eFixedMessagePump<Message> messages;
 private:
-	friend class channel_data;
-	friend class eventData;
+	friend struct channel_data;
+	friend struct eventData;
 	static eEPGCache *instance;
 
 	typedef std::map<iDVBChannel*, channel_data*> ChannelMap;
