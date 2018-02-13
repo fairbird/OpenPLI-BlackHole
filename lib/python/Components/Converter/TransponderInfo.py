@@ -42,16 +42,18 @@ class TransponderInfo(Converter, object):
 			[onid, tsid] = [int(x, 16) for x in ref.split(':')[4:6]]
 			if not transponderdata["system"]:
 				transponderdata["system"] = transponderraw.get("tuner_type", "None")
-			if not transponderdata["system"]:
-				return ""
-			if "DVB-T" in transponderdata["system"]:
-				return "%s %s-%s %s %d MHz %s" % (transponderdata["system"], tsid, onid, transponderdata["channel"], transponderdata["frequency"]/1000000 + 0.5 , transponderdata["bandwidth"])
-			elif "DVB-C" in transponderdata["system"]:
-				return "%s %s-%s %d MHz %d %s %s" % (transponderdata["system"], tsid, onid, transponderdata["frequency"]/1000 + 0.5, transponderdata["symbol_rate"]/1000 + 0.5, transponderdata["fec_inner"], \
-					transponderdata["modulation"])
-			elif "ATSC" in transponderdata["system"]:
+			try:
+				if "DVB-T" in transponderdata["system"]:
+					return "%s %s-%s %s %d MHz %s" % (transponderdata["system"], tsid, onid, transponderdata["channel"], transponderdata["frequency"]/1000000 + 0.5 , transponderdata["bandwidth"])
+				elif "DVB-C" in transponderdata["system"]:
+					return "%s %s-%s %d MHz %d %s %s" % (transponderdata["system"], tsid, onid, transponderdata["frequency"]/1000 + 0.5, transponderdata["symbol_rate"]/1000 + 0.5, transponderdata["fec_inner"], \
+						transponderdata["modulation"])
+				elif "ATSC" in transponderdata["system"]:
 					return "%s %s-%s %d MHz %s" % (transponderdata["system"], tsid, onid, transponderdata["frequency"]/1000 + 0.5, transponderdata["modulation"])
 				return "%s %s-%s %d %s %d %s %s %s" % (transponderdata["system"], tsid, onid, transponderdata["frequency"]/1000 + 0.5, transponderdata["polarization_abbreviation"], transponderdata["symbol_rate"]/1000 + 0.5, \
+					transponderdata["fec_inner"], transponderdata["modulation"], transponderdata["detailed_satpos" in self.type and "orbital_position" or "orb_pos"])
+			except:
+				return ""
 		if "://" in ref:
 			return _("Stream") + " " + ref.rsplit("://", 1)[1].split("/")[0]
 		return ""

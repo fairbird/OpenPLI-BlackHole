@@ -55,7 +55,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.Modulation_Auto,
 			eDVBFrontendParametersSatellite.RollOff_auto,
 			eDVBFrontendParametersSatellite.Pilot_Unknown,
-			-1,, # NO_STREAM_ID_FILTER
+			-1, # NO_STREAM_ID_FILTER
 			eDVBFrontendParametersSatellite.PLS_Gold,
 			0,  # default gold PLS code
 			3224,
@@ -74,7 +74,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.Modulation_Auto,
 			eDVBFrontendParametersSatellite.RollOff_auto,
 			eDVBFrontendParametersSatellite.Pilot_Unknown,
-			-1,, # NO_STREAM_ID_FILTER
+			-1, # NO_STREAM_ID_FILTER
 			eDVBFrontendParametersSatellite.PLS_Gold,
 			0,  # default gold PLS code
 			2004,

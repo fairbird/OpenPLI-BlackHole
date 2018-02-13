@@ -1,4 +1,4 @@
-ChannelSelection.py# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from Tools.Profile import profile
 from Screen import Screen
 import Screens.InfoBar
