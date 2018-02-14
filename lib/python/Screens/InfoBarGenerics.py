@@ -38,9 +38,15 @@ from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInform
 from time import time, localtime, strftime
 import os
 from bisect import insort
-from sys import maxint
+
 from RecordTimer import RecordTimerEntry, RecordTimer, findSafeRecordPath
+
+# hack alert!
 from Menu import MainMenu, mdom
+
+# sys.maxint on 64bit (2**63-1) fails with OverflowError on eActionMap.bindAction use 32bit value (2**31-1)
+maxint = 2147483647
+
 from Components.config import ConfigInteger
 from Blackhole.BhEI import Nab_ExtraInfobar, nab_Switch_Autocam
 from Tools.Directories import SCOPE_HDD, resolveFilename, pathExists
