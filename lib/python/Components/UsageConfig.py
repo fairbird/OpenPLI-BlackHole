@@ -102,7 +102,7 @@ def InitUsageConfig():
      ('swap', _('Swap PiP and main picture')),
      ('swapstop', _('Move PiP to main picture')),
      ('stop', _('Stop PiP'))])
-    config.usage.pip_hideOnExit = ConfigSelection(default='without popup', choices=[('no', _('No')), ('popup', _('With popup')), ('without popup', _('Without popup'))])
+    config.usage.pip_hideOnExit = ConfigSelection(default='without popup', choices=[('no', _('no')), ('popup', _('With popup')), ('without popup', _('Without popup'))])
     choicelist = [('-1', _('Disabled')), ('0', _('No timeout'))]
     for i in [60,
      300,
@@ -179,14 +179,18 @@ def InitUsageConfig():
      ('repeatcurrent', _('Repeat'))])
     config.usage.next_movie_msg = ConfigYesNo(default = True)
     config.usage.last_movie_played = ConfigText()
-    config.usage.leave_movieplayer_onExit = ConfigSelection(default='popup', choices=[('no', _('No')),
+    config.usage.leave_movieplayer_onExit = ConfigSelection(default='popup', choices=[('no', _('no')),
      ('popup', _('With popup')),
      ('without popup', _('Without popup')),
      ('movielist', _('Return to movie list'))])
     config.usage.setup_level = ConfigSelection(default='expert', choices=[('simple', _('Normal')), ('intermediate', _('Advanced')), ('expert', _('Expert'))])
-    config.usage.startup_to_standby = ConfigSelection(default='no', choices=[('no', _('No')), ('yes', _('Yes')), ('except', _('No, except Wakeup timer'))])
-    config.usage.wakeup_menu = ConfigNothing()
-    config.usage.wakeup_enabled = ConfigYesNo(default = False)
+    config.usage.startup_to_standby = ConfigSelection(default='no', choices=[('no', _('no')), ('yes', _('yes')), ('except', _('No, except Wakeup timer'))])
+    
+    config.usage.wakeup_enabled = ConfigSelection(default = "no", choices = [
+     ("no", _("no")),
+     ("yes", _("yes")),
+     ("standby", _("Yes, only from standby")),
+     ("deepstandby", _("Yes, only from deep standby")) ])
     config.usage.wakeup_day = ConfigSubDict()
     config.usage.wakeup_time = ConfigSubDict()
     for i in range(7):
@@ -290,7 +294,7 @@ def InitUsageConfig():
      ('barright', _('Progress bar right')),
      ('percleft', _('Percentage left')),
      ('percright', _('Percentage right')),
-     ('no', _('No'))])
+     ('no', _('no'))])
     config.usage.show_channel_numbers_in_servicelist = ConfigYesNo(default = True)
     config.usage.show_event_progress_in_servicelist.addNotifier(refreshServiceList)
     config.usage.show_channel_numbers_in_servicelist.addNotifier(refreshServiceList)
@@ -594,19 +598,19 @@ def InitUsageConfig():
     if SystemInfo['HasForceLNBOn']:
         def forceLNBPowerChanged(configElement):
             open(SystemInfo['HasForceLNBOn'], 'w').write(configElement.value)
-        config.misc.forceLnbPower = ConfigSelection(default='on', choices=[('on', _('Yes')), ('off', _('No'))])
+        config.misc.forceLnbPower = ConfigSelection(default='on', choices=[('on', _('yes')), ('off', _('no'))])
         config.misc.forceLnbPower.addNotifier(forceLNBPowerChanged)
 
     if SystemInfo['HasForceToneburst']:
         def forceToneBurstChanged(configElement):
             open(SystemInfo['HasForceToneburst'], 'w').write(configElement.value)
-        config.misc.forceToneBurst = ConfigSelection(default='enable', choices=[('enable', _('Yes')), ('disable', _('No'))])
+        config.misc.forceToneBurst = ConfigSelection(default='enable', choices=[('enable', _('yes')), ('disable', _('no'))])
         config.misc.forceToneBurst.addNotifier(forceToneBurstChanged)
 
     if SystemInfo['HasBypassEdidChecking']:
         def setHasBypassEdidChecking(configElement):
             open(SystemInfo['HasBypassEdidChecking'], 'w').write(configElement.value)
-        config.av.bypassEdidChecking = ConfigSelection(default='00000000', choices=[('00000001', _('Yes')), ('00000000', _('No'))])
+        config.av.bypassEdidChecking = ConfigSelection(default='00000000', choices=[('00000001', _('yes')), ('00000000', _('no'))])
         config.av.bypassEdidChecking.addNotifier(setHasBypassEdidChecking)
 
     if SystemInfo['HasColorspace']:
