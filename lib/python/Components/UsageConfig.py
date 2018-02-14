@@ -626,6 +626,25 @@ def InitUsageConfig():
              '422': _('422'),
              '444': _('444')})
         config.av.hdmicolorspace.addNotifier(setHaveColorspace)
+
+	if SystemInfo["HasColordepth"]:
+		def setHaveColordepth(configElement):
+			open(SystemInfo["HasColordepth"], "w").write(configElement.value)
+		config.av.hdmicolordepth = ConfigSelection(default = "auto", choices={"auto": _("Auto"), "8bit": _("8bit"), "10bit": _("10bit"), "12bit": _("12bit")})
+		config.av.hdmicolordepth.addNotifier(setHaveColordepth)
+
+	if SystemInfo["HasHDMIpreemphasis"]:
+		def setHDMIpreemphasis(configElement):
+			open(SystemInfo["HasHDMIpreemphasis"], "w").write(configElement.value)
+		config.av.hdmipreemphasis = ConfigSelection(default = "off", choices = [ ("on", _("yes")), ("off", _("no"))] )
+		config.av.hdmipreemphasis.addNotifier(setHDMIpreemphasis)
+
+	if SystemInfo["HasColorimetry"]:
+		def setColorimetry(configElement):
+			open(SystemInfo["HasColorimetry"], "w").write(configElement.value)
+		config.av.hdmicolorimetry = ConfigSelection(default = "auto", choices = [("auto", _("Auto")), ("bt2020ncl", _("BT 2020 NCL")), ("bt2020cl", _("BT 2020 CL")), ("bt709", _("BT 709"))])
+		config.av.hdmicolorimetry.addNotifier(setColorimetry)
+
     config.subtitles = ConfigSubsection()
     config.subtitles.ttx_subtitle_colors = ConfigSelection(default='1', choices=[('0', _('original')), ('1', _('white')), ('2', _('yellow'))])
     config.subtitles.ttx_subtitle_original_position = ConfigYesNo(default = False)
