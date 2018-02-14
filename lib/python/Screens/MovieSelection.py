@@ -2157,13 +2157,14 @@ class MovieSelectionFileManagerList(Screen):
 				"cancel": self.exit,
 				"ok": self.list.toggleSelection,
 				"red": self.exit,
+				"green": self.selectAction,
 				"yellow": self.sortList,
 				"blue": self.list.toggleAllSelection,
 				"contextMenu": self.selectAction,
 			})
 
 		self["key_red"] = Button(_("Cancel"))
-		self["key_green"] = Button()
+		self["key_green"] = Button(_("OK"))
 		self["key_yellow"] = Button(_("Sort"))
 		self["key_blue"] = Button(_("Inversion"))
 
@@ -2197,8 +2198,6 @@ class MovieSelectionFileManagerList(Screen):
 		menu.append((_("Copy to..."),5))
 		menu.append((_("Move to..."),6))
 		buttons += ["5","6"]
-#		menu.append((_("Delete"),8))
-#		buttons += ["8"]
 		text = _("Select operation:")
 		self.session.openWithCallback(self.menuCallback, ChoiceBox, title=text, list=menu, keys=buttons)
 
@@ -2216,6 +2215,7 @@ class MovieSelectionFileManagerList(Screen):
 
 	def copySelected(self):
 		self.selectMovieLocation(title=_("Select destination for copy selected files..."), callback=self.gotCopyMovieDest)
+
 	def gotCopyMovieDest(self, choice):
 		if not choice:
 			return
@@ -2238,6 +2238,7 @@ class MovieSelectionFileManagerList(Screen):
 
 	def moveSelected(self):
 		self.selectMovieLocation(title=_("Select destination for move selected files..."), callback=self.gotMoveMovieDest)
+
 	def gotMoveMovieDest(self, choice):
 		if not choice:
 			return
