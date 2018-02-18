@@ -241,7 +241,7 @@ class CommitInfo(Screen):
          ('enigma2-plugins', 'Enigma2 Plugins'),
          ('aio-grab', 'Aio Grab'),
          ('gst-plugin-dvbmediasink', 'Gst Plugin Dvbmediasink'),
-         ('enigma2-plugin-extensions-xmltvimport', 'Plugin Xmltvimport'),
+         ('enigma2-plugin-extensions-EPGImport', 'Plugin EPGImport'),
          ('enigma2-plugin-skins-magic', 'Skin Magic SD'),
          ('tuxtxt', 'Tuxtxt')]
         self.cachedProjects = {}
