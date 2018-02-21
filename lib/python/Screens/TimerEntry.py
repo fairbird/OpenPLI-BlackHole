@@ -7,6 +7,8 @@ from Components.ConfigList import ConfigListScreen
 from Components.MenuList import MenuList
 from Components.Sources.StaticText import StaticText
 from Components.Label import Label
+from Components.Button import Button
+from Components.Pixmap import Pixmap
 from Components.SystemInfo import SystemInfo
 from Components.UsageConfig import defaultMoviePath
 from Screens.MovieSelection import getPreferredTagEditor
@@ -27,10 +29,10 @@ class TimerEntry(Screen, ConfigListScreen):
 		self.entryDate = None
 		self.entryService = None
 
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText(_("Save"))
-		self["key_yellow"] = StaticText(_("Timer type"))
-		self["key_blue"] = StaticText("")
+		self["oktext"] = Label(_("OK"))
+		self["canceltext"] = Label(_("Cancel"))
+		self["ok"] = Pixmap()
+		self["cancel"] = Pixmap()
 
 		self.createConfig()
 
@@ -196,9 +198,9 @@ class TimerEntry(Screen, ConfigListScreen):
 		if self.timerentry_justplay.value == "zap":
 			self.list.append(self.entryZapWakeup)
 			self.list.append(self.entryShowEndTime)
-			self["key_blue"].setText(_("Wakeup type"))
-		else:
-			self["key_blue"].setText("")
+#			self["key_blue"].setText(_("Wakeup type"))
+#		else:
+#			self["key_blue"].setText("")
 		self.entryEndTime = getConfigListEntry(_("End time"), self.timerentry_endtime)
 		if self.timerentry_justplay.value != "zap" or self.timerentry_showendtime.value:
 			self.list.append(self.entryEndTime)
@@ -517,10 +519,10 @@ class TimerLog(Screen):
 		self["loglist"] = MenuList(self.list)
 		self["logentry"] = Label()
 
-		self["key_red"] = StaticText(_("Delete entry"))
-		self["key_green"] = StaticText("")
-		self["key_yellow"] = StaticText("")
-		self["key_blue"] = StaticText(_("Clear log"))
+		self["key_red"] = Button(_("Delete entry"))
+		self["key_green"] = Button("")
+		self["key_yellow"] = Button("")
+		self["key_blue"] = Button(_("Clear log"))
 
 		self.onShown.append(self.updateText)
 

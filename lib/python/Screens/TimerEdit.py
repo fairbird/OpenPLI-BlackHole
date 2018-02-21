@@ -1,9 +1,10 @@
 from Components.ActionMap import ActionMap
-from Components.Sources.StaticText import StaticText
+from Components.Button import Button
 from Components.Label import Label
 from Components.config import config
 from Components.MenuList import MenuList
 from Components.TimerList import TimerList
+from Components.Sources.StaticText import StaticText
 from Components.TimerSanityCheck import TimerSanityCheck
 from Components.UsageConfig import preferredTimerPath
 from RecordTimer import RecordTimerEntry, parseEvent, AFTEREVENT
@@ -37,10 +38,10 @@ class TimerEditList(Screen):
 		self.key_yellow_choice = self.EMPTY
 		self.key_blue_choice = self.EMPTY
 
-		self["key_red"] = StaticText("")
-		self["key_green"] = StaticText(_("Add"))
-		self["key_yellow"] = StaticText("")
-		self["key_blue"] = StaticText("")
+		self["key_red"] = Button("")
+		self["key_green"] = Button(_("Add"))
+		self["key_yellow"] = Button("")
+		self["key_blue"] = Button("")
 
 		self["description"] = Label("")
 
@@ -372,10 +373,10 @@ class TimerSanityConflict(Screen):
 
 		self["timerlist"] = TimerList(self.list)
 
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText("")
-		self["key_yellow"] = StaticText("")
-		self["key_blue"] = StaticText("")
+		self["key_red"] = Button(_("Cancel"))
+		self["key_green"] = Button("")
+		self["key_yellow"] = Button("")
+		self["key_blue"] = Button("")
 
 		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "ShortcutActions", "TimerEditActions", "MenuActions"],
 			{
