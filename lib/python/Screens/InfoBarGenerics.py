@@ -1826,7 +1826,7 @@ class InfoBarShowMovies():
          'down': (self.down, _('Open the movie list'))})
 
 
-class InfoBarTimeshift(InfoBarSeek):
+class InfoBarTimeshift():
 
     def __init__(self):
         self['TimeshiftActions'] = HelpableActionMap(self, 'InfobarTimeshiftActions', {'timeshiftStart': (self.startTimeshift, _('Start timeshift')),
