@@ -3209,9 +3209,10 @@ PyObject *eEPGCache::search(ePyObject arg)
 					{
 						uint8_t *data = it->second.data;
 						int textlen = 0;
+						const char *textptr = NULL;
 						if ( data[0] == 0x4D && querytype > 0 && querytype < 5 ) // short event descriptor
 						{
-							const char *textptr = (const char*)&data[6];
+							textptr = (const char*)&data[6];
 							textlen = data[5];
 							if (data[6] < 0x20)
 							{
@@ -3221,9 +3222,9 @@ PyObject *eEPGCache::search(ePyObject arg)
 								textlen = text.length();
 							}
 						}
-						else if ( data[0] == 0x4E 0 && querytype == 5 ) // extended event descriptor
+						else if ( data[0] == 0x4E && querytype == 5 ) // extended event descriptor
 						{
-							const char *textptr = (const char*)&data[8];
+							textptr = (const char*)&data[8];
 							textlen = data[7];
 							if (data[8] < 0x20)
 							{
@@ -3257,7 +3258,7 @@ PyObject *eEPGCache::search(ePyObject arg)
 							{
 								while (textlen >= strlen)
 								{
-									if (!strncasecmp(titleptr, str, strlen))
+									if (!strncasecmp(textptr, str, strlen))
 									{
 										descr.push_back(it->first);
 										break;
